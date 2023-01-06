@@ -8,6 +8,12 @@
 #ifndef MOTORS_H_
 #define MOTORS_H_
 
+typedef struct {
+	int speed;
+	int direction;
+	int is_stopped;
+} MotorState_t;
+
 void init_motors();
 
 void set_speed(int speed);

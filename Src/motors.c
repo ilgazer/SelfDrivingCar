@@ -1,5 +1,6 @@
 
 #include <stdint.h>
+#include <math.h>
 
 #include "motors.h"
 #include "utils.h"
@@ -8,9 +9,9 @@
 #include "board/gpio.h"
 #include "board/iser.h"
 
-int speed = 0;
-int direction = 0;
-int is_stopped = 0;
+int _motors_speed = 0;
+int _motors_direction = 0;
+int _motors_is_stopped = 0;
 
 //Motor driver pin mappings
 
@@ -26,11 +27,11 @@ int is_stopped = 0;
 
 typedef struct {
 	uint32_t dir_pins;
-	uint32_t *speed;
+	volatile uint32_t *speed;
 } Motor_t;
 
-const Motor_t left_motor = { DRV_IN1, *(TIM15->CCR1) };
-const Motor_t right_motor = { DRV_IN3, *(TIM15->CCR2) };
+const Motor_t left_motor = { DRV_IN1, &(TIM15->CCR1) };
+const Motor_t right_motor = { DRV_IN3, &(TIM15->CCR2) };
 
 void init_motors() {
 	SET(RCC_AHB2ENR, GPIOAEN);
@@ -77,12 +78,6 @@ void init_motors() {
 	TIM15->EGR |= 1;
 }
 
-void update_motors() {
-	set_motor(left_motor, is_stopped, speed + direction);
-	set_motor(left_motor, is_stopped, speed - direction);
-}
-
-
 inline void set_motor(Motor_t motor, int apply_brake, int value) {
 	if (apply_brake) {
 		SET_BITS(GPIOD->MODER, motor.dir_pins, 0, 2);
@@ -93,7 +88,13 @@ inline void set_motor(Motor_t motor, int apply_brake, int value) {
 	}
 }
 
-void set_speed(Motor_t motor, int speed) {
+void update_motors() {
+	set_motor(left_motor, _motors_is_stopped, _motors_speed + _motors_direction);
+	set_motor(left_motor, _motors_is_stopped, _motors_speed - _motors_direction);
+}
+
+
+void set_speed(int speed) {
 	TIM15->CCR1 = 1000;
 	TIM15->CCR2 = 2000;
 
@@ -101,7 +102,9 @@ void set_speed(Motor_t motor, int speed) {
 	TIM15->EGR |= 1;
 }
 
-void set_direction(int direction);
+void set_direction(int direction){
+
+}
 
 void stop() {
 
