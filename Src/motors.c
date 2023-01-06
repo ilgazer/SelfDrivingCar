@@ -1,5 +1,4 @@
 
-
 #include <stdint.h>
 
 #include "motors.h"
@@ -25,26 +24,15 @@ int is_stopped = 0;
 #define DRV_ENA 2 //Left
 #define DRV_ENB 3 //Right
 
-//Motor definitions
-
-#define MOTOR_FWD_L DRV_IN1
-#define MOTOR_BCK_L DRV_IN2
-#define MOTOR_SPD_L DRV_ENA
-
-#define MOTOR_FWD_R DRV_IN3
-#define MOTOR_BCK_R DRV_IN4
-#define MOTOR_SPD_R DRV_ENB
-
 typedef struct {
-	uint32_t fwd_pin;
-	uint32_t bck_pin;
-	uint32_t spd_pin;
+	uint32_t dir_pins;
+	uint32_t *speed;
 } Motor_t;
 
-const Motor_t left_motor(DRV_IN1, DRV_IN2, DRV_ENA);
+const Motor_t left_motor = { DRV_IN1, *(TIM15->CCR1) };
+const Motor_t right_motor = { DRV_IN3, *(TIM15->CCR2) };
 
-
-void init_motors(){
+void init_motors() {
 	SET(RCC_AHB2ENR, GPIOAEN);
 	SET(RCC_AHB2ENR, GPIODEN);
 
@@ -54,7 +42,6 @@ void init_motors(){
 	SET_BITS(GPIOD->MODER, DRV_IN2 * 2, OUTPUT_MODE, 2);
 	SET_BITS(GPIOD->MODER, DRV_IN3 * 2, OUTPUT_MODE, 2);
 	SET_BITS(GPIOD->MODER, DRV_IN4 * 2, OUTPUT_MODE, 2);
-
 
 	SET_BITS(GPIOA->MODER, DRV_ENA * 2, ALTERNATE_MODE, 2);
 	SET_BITS(GPIOA->AFR[0], DRV_ENA * 4, 14, 4);
@@ -67,11 +54,11 @@ void init_motors(){
 	TIM15->SR = 0; //clear UIF if it is set
 
 	TIM15->CCMR1 =
-			CCx_OUTPUT << CC1S	|
-			CCx_OUTPUT << CC2S	|
-			OCxM_PWM1 << OC1M	|
-			OCxM_PWM1 << OC2M	|
-			1 << OC1PE			|
+			CCx_OUTPUT << CC1S |
+			CCx_OUTPUT << CC2S |
+			OCxM_PWM2 << OC1M |
+			OCxM_PWM2 << OC2M |
+			1 << OC1PE |
 			1 << OC2PE;
 
 	SET(TIM15->CR1, ARPE);
@@ -90,14 +77,23 @@ void init_motors(){
 	TIM15->EGR |= 1;
 }
 
-void update_motors(){
-	if(is_stopped){
-		SET();
-	}
+void update_motors() {
+	set_motor(left_motor, is_stopped, speed + direction);
+	set_motor(left_motor, is_stopped, speed - direction);
 }
 
 
-void set_speed(int speed){
+inline void set_motor(Motor_t motor, int apply_brake, int value) {
+	if (apply_brake) {
+		SET_BITS(GPIOD->MODER, motor.dir_pins, 0, 2);
+		*motor.speed = 0xffff;
+	} else {
+		SET_BITS(GPIOD->MODER, motor.dir_pins, (value >= 0) + 1, 2);
+		*motor.speed = abs(value);
+	}
+}
+
+void set_speed(Motor_t motor, int speed) {
 	TIM15->CCR1 = 1000;
 	TIM15->CCR2 = 2000;
 
@@ -105,10 +101,9 @@ void set_speed(int speed){
 	TIM15->EGR |= 1;
 }
 
-
 void set_direction(int direction);
 
-void stop(){
+void stop() {
 
 }
 

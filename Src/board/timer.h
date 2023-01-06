@@ -109,6 +109,7 @@ typedef struct {
 
 //OCxM modes
 #define OCxM_PWM1 0b110
+#define OCxM_PWM2 0b111
 
 //CCxS modes
 #define CCx_OUTPUT 		0

@@ -13,5 +13,4 @@
 #define RESET(REG, OFFSET) (REG) &= ~(1 << (OFFSET))
 #define GET(REG, OFFSET) ((REG) | (1 << (OFFSET)))
 
-
 #endif /* UTILS_H_ */
