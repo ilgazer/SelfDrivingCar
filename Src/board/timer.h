@@ -8,6 +8,8 @@
 #ifndef TIMER_H_
 #define TIMER_H_
 
+#include <stdint.h>
+
 
 typedef struct {
 	volatile uint32_t CR1;
@@ -104,6 +106,9 @@ typedef struct {
 #define OC2M		12
 #define OC1M3		16
 #define OC2M3		24
+
+//OCxM modes
+#define OCxM_PWM1 0b110
 
 //CCxS modes
 #define CCx_OUTPUT 		0

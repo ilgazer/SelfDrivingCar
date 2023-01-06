@@ -8,6 +8,7 @@
 #ifndef RCC_H_
 #define RCC_H_
 
+#include <stdint.h>
 
 //RCC_AHB2ENR
 

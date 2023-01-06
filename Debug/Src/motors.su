@@ -1,0 +1,2 @@
+../Src/motors.c:13:6:init_motors	4	static
+../Src/motors.c:53:6:set_speed	16	static

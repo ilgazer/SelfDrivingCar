@@ -6,7 +6,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2023 STMicroelectronics.
+ * Copyright (c) 2022 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -17,13 +17,19 @@
  */
 
 #include <stdint.h>
+#include "board/timer.h"
+#include "board/rcc.h"
+#include "board/gpio.h"
+#include "board/iser.h"
+#include "utils.h"
+#include "motors.h"
 
-#if !defined(__SOFT_FP__) && defined(__ARM_FP)
-  #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
-#endif
 
-int main(void)
-{
-    /* Loop forever */
-	for(;;);
+int main(void) {
+	init_motors();
+	set_speed(1200);
+
+	while(1){
+
+	}
 }
