@@ -78,7 +78,7 @@ void init_motors() {
 	TIM15->EGR |= 1;
 }
 
-inline void set_motor(Motor_t motor, int apply_brake, int value) {
+void set_motor(Motor_t motor, int apply_brake, int value) {
 	if (apply_brake) {
 		SET_BITS(GPIOD->MODER, motor.dir_pins, 0, 2);
 		*motor.speed = 0xffff;
@@ -90,24 +90,26 @@ inline void set_motor(Motor_t motor, int apply_brake, int value) {
 
 void update_motors() {
 	set_motor(left_motor, _motors_is_stopped, _motors_speed + _motors_direction);
-	set_motor(left_motor, _motors_is_stopped, _motors_speed - _motors_direction);
+	set_motor(right_motor, _motors_is_stopped, _motors_speed - _motors_direction);
 }
 
 
 void set_speed(int speed) {
-	TIM15->CCR1 = 1000;
-	TIM15->CCR2 = 2000;
-
-	TIM15->SR = 0; //clear UIF if it is set
-	TIM15->EGR |= 1;
+	_motors_speed = speed;
+	update_motors();
 }
 
 void set_direction(int direction){
-
+	_motors_direction = direction;
+	update_motors();
 }
 
 void stop() {
-
+	_motors_is_stopped = 1;
+	update_motors();
 }
 
-void enable();
+void enable(){
+	_motors_is_stopped = 0;
+	update_motors();
+}

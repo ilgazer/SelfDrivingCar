@@ -26,32 +26,44 @@
 #include "joystick.h"
 #include "leds.h"
 #include "board/adc.h"
+
+int joystick_x_calib = -1;
+int joystick_y_calib = -1;
 void ADC1_2_IRQHandler() {
-
-	uint32_t joystick_y = ADC1->DR;
-	uint32_t joystick_x = ADC1->DR;
-
-	if(joystick_y < 4096 / 3){
-		set_led_direction(led_left);
-	}else if(joystick_y  > 8192 / 3){
-		set_led_direction(led_right);
-	}else if(joystick_x < 4096 / 3){
-		set_led_direction(led_forward);
-	}else if(joystick_x > 8192 / 3){
-		set_led_direction(led_back);
+	if(joystick_x_calib == -1){
+		joystick_y_calib = ADC1->JDR1;
+		joystick_x_calib = ADC1->JDR2;
 	}
 
+	uint32_t joystick_y = ADC1->JDR1;
+	uint32_t joystick_x = ADC1->JDR2;
 
+	if (joystick_y < 4096 / 3) {
+		set_led_direction(LED_LEFT);
+	} else if (joystick_y > 8192 / 3) {
+		set_led_direction(LED_RIGHT);
+	} else if (joystick_x < 4096 / 3) {
+		set_led_direction(LED_FORWARD);
+	} else if (joystick_x > 8192 / 3) {
+		set_led_direction(LED_BACK);
+	} else {
+		set_led_direction(LED_STOP);
+	}
 
+	set_speed(joystick_x - joystick_x_calib);
+	set_direction(joystick_y - joystick_y_calib);
+
+	SET(ADC1->ISR, ADC_JEOS);
 }
 
 int main(void) {
-//	init_motors();
-//	set_speed(1200);
-	init_leds();
-	set_led_direction(led_left);
-	initialize_adc();
-	while(1){
+	init_motors();
 
+	init_leds();
+	set_led_direction(LED_STOP);
+	initialize_adc();
+	while (1) {
+	    for(int i=0; i<=33300; i++);
+		SET(ADC1->CR, ADC_JADSTART);
 	}
 }
