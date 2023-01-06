@@ -10,23 +10,42 @@
 
 
 typedef struct {
-	volatile uint32_t ADC_ISR;
-	volatile uint32_t ADC_IER;
-	volatile uint32_t ADC_CR;
-	volatile uint32_t ADC_CFGR;
-	volatile uint32_t ADC_CFGR2;
-	volatile uint32_t ADC_SMPR1;
-	volatile uint32_t ADC_SMPR2;
-	volatile uint32_t RESERVED;
-	volatile uint32_t ADC_TR1;
-	volatile uint32_t ADC_TR2;
-	volatile uint32_t ADC_TR3;
-	volatile uint32_t RESERVED2;
-	volatile uint32_t ADC_SQR1;
-	volatile uint32_t ADC_SQR2;
-	volatile uint32_t ADC_SQR3;
-	volatile uint32_t ADC_SQR4;
-	volatile uint32_t ADC_DR;
+	volatile uint32_t ISR;
+	volatile uint32_t IER;
+	volatile uint32_t CR;
+	volatile uint32_t CFGR;
+	volatile uint32_t CFGR2;
+	volatile uint32_t SMPR1;
+	volatile uint32_t SMPR2;
+	volatile uint32_t reserved;
+	volatile uint32_t TR1;
+	volatile uint32_t TR2;
+	volatile uint32_t TR3;
+	volatile uint32_t reserved2;
+	volatile uint32_t SQR1;
+	volatile uint32_t SQR2;
+	volatile uint32_t SQR3;
+	volatile uint32_t SQR4;
+	volatile uint32_t DR;
+	volatile uint32_t reserved3;
+	volatile uint32_t reserved4;
+	volatile uint32_t JSQR;
+	volatile uint32_t reserved5[4];
+	volatile uint32_t OFR1;
+	volatile uint32_t OFR2;
+	volatile uint32_t OFR3;
+	volatile uint32_t OFR4;
+	volatile uint32_t reserved6[4];
+	volatile uint32_t JDR1;
+	volatile uint32_t JDR2;
+	volatile uint32_t JDR3;
+	volatile uint32_t JDR4;
+	volatile uint32_t reserved7[4];
+	volatile uint32_t AWD2CR;
+	volatile uint32_t AWD3CR;
+	volatile uint32_t reserved8[2];
+	volatile uint32_t DIFSEL;
+	volatile uint32_t CALFACT;
 } ADC_t;
 
 typedef struct {
