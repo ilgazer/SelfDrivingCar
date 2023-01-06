@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include "leds.h"
+#include "board/adc.h"
 typedef struct
 {
   volatile uint32_t CR1;
@@ -104,20 +105,6 @@ void init_leds(){
 static uint8_t led_direction;
 void set_led_direction(uint8_t d){
 	led_direction = d;
-	switch (led_direction){
-	case 0:
-		GPIOB->ODR = 0b1100;
-		break;
-	case 2:
-		GPIOB->ODR = 0b0011;
-		break;
-	case 1:
-		GPIOB->ODR = 0b1010;
-		break;
-	case 3:
-		GPIOB->ODR = 0b0101;
-		break;
-	}
 }
 void TIM3_IRQHandler(void)
 {
@@ -129,13 +116,14 @@ void TIM3_IRQHandler(void)
 		GPIOB->ODR = 0b0011;
 		break;
 	case 1:
-		GPIOB->ODR = (~GPIOB->ODR & 0b0101) | 0b1010;
+		GPIOB->ODR ^= 0b0101;
 		break;
 	case 3:
 		GPIOB->ODR = (~GPIOB->ODR & 0b1010)| 0b0101;
 		break;
 	};
 	TIM3->SR=0; //clear UIF
+	ADC1->CR |= (1 << 2);
 }
 
 

@@ -8,7 +8,7 @@
 #ifndef ADC_H_
 #define ADC_H_
 
-
+#include <stdint.h>
 typedef struct {
 	volatile uint32_t ISR;
 	volatile uint32_t IER;
@@ -49,10 +49,10 @@ typedef struct {
 } ADC_t;
 
 typedef struct {
-	volatile uint32_t ADC_CSR;
+	volatile uint32_t CSR;
 	volatile uint32_t RESERVED;
-	volatile uint32_t ADC_CCR;
-	volatile uint32_t ADC_CDR;
+	volatile uint32_t CCR;
+	volatile uint32_t CDR;
 } ADC_shared_t;
 
 //ADC_ISR

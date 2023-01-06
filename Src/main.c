@@ -23,12 +23,34 @@
 #include "board/iser.h"
 #include "utils.h"
 #include "motors.h"
+#include "joystick.h"
+#include "leds.h"
+#include "board/adc.h"
+void ADC1_2_IRQHandler() {
 
+	uint32_t joystick_y = ADC1->DR;
+	uint32_t joystick_x = ADC1->DR;
+
+	if(joystick_y < 4096 / 3){
+		set_led_direction(led_left);
+	}else if(joystick_y  > 8192 / 3){
+		set_led_direction(led_right);
+	}else if(joystick_x < 4096 / 3){
+		set_led_direction(led_forward);
+	}else if(joystick_x > 8192 / 3){
+		set_led_direction(led_back);
+	}
+
+
+
+}
 
 int main(void) {
-	init_motors();
-	set_speed(1200);
-
+//	init_motors();
+//	set_speed(1200);
+	init_leds();
+	set_led_direction(led_left);
+	initialize_adc();
 	while(1){
 
 	}
