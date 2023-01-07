@@ -1,4 +1,3 @@
-
 #include "drive.h"
 
 static uint8_t mode;
@@ -6,6 +5,10 @@ int joystick_x_calib = -1;
 int joystick_y_calib = -1;
 
 static uint8_t mode;
+
+void init_mode(uint8_t to_mode) {
+	mode = to_mode;
+}
 void set_mode(uint8_t to_mode) {
 	mode = to_mode;
 	drive();
@@ -31,8 +34,8 @@ void drive_override() {
 		set_led_direction(LED_STOP);
 	}
 
-	set_speed(joystick_x - joystick_x_calib);
-	set_direction(joystick_y - joystick_y_calib);
+	set_speed( joystick_x_calib - joystick_x);
+	set_direction(joystick_y_calib - joystick_y);
 }
 void drive_hard_stop() {
 	stop();
@@ -59,6 +62,58 @@ void drive_manual() {
 	}
 
 }
+
+static uint32_t LDR_right_calib = -1;
+static uint32_t LDR_left_calib = -1;
+void drive_auto() {
+	uint32_t LDR_right = ADC1->JDR3 - LDR_right_calib;
+	uint32_t LDR_left = ADC1->JDR4 - LDR_left_calib;
+
+	int direction = (LDR_right - LDR_left) * 10  ;
+	if (direction < -500) {
+		set_direction(direction > -1500 ? direction : -1500);
+		set_led_direction(LED_RIGHT);
+	} else if (direction > 500) {
+		set_direction(direction < 1500 ? direction : 1500);
+		set_led_direction(LED_LEFT);
+	} else {
+		set_direction(0);
+		set_led_direction(LED_FORWARD);
+	}
+	set_speed(2000);
+
+}
+void auto_wait(){
+	if (joystick_x_calib == -1) {
+		joystick_y_calib = ADC1->JDR1;
+		joystick_x_calib = ADC1->JDR2;
+	}
+	if (LDR_left_calib == -1) {
+		LDR_right_calib = ADC1->JDR3;
+		LDR_left_calib = ADC1->JDR4;
+	}
+	uint32_t joystick_x = ADC1->JDR2;
+	set_led_direction(LED_STOP);
+	set_direction(0);
+	set_speed(0);
+	if (joystick_x < 4096 / 3) {
+			mode = AUTO;
+			drive_auto();
+	}
+}
+void auto_stop(){
+	set_speed(0);
+	set_direction(0);
+	mode = AUTO_STOP;
+}
+void driver_stop(){
+	set_led_direction(LED_STOP);
+	if(mode <= HARD_STOP){
+		drive_hard_stop();
+	}else{
+		auto_stop();
+	}
+}
 void drive() {
 	switch (mode) {
 	case MANUAL:
@@ -69,6 +124,15 @@ void drive() {
 		break;
 	case HARD_STOP:
 		drive_hard_stop();
+		break;
+	case AUTO:
+		drive_auto();
+		break;
+	case AUTO_WAIT:
+		auto_wait();
+		break;
+	case AUTO_STOP:
+		auto_stop();
 		break;
 	}
 }

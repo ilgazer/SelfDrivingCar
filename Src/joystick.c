@@ -6,11 +6,16 @@
 
 
 //PA0, PA1 joystick inputs
+//PA0 joyistick VRy
+//PA1 joyistick VRx
+//PC0 right LDR
+//PC1 left LDR
 //PE15 push button interrupt
 void initialize_adc() {
 	ADC_shared->CCR |= (0b1011 << 18);
 	//Enable Clock for GPIO
 	SET(RCC_AHB2ENR, GPIOAEN);
+	SET(RCC_AHB2ENR, GPIOCEN);
 
 	//Enable Clock for ADC
 	SET(RCC_AHB2ENR, ADCEN);
@@ -24,15 +29,23 @@ void initialize_adc() {
 	SET_BITS(GPIOA->MODER, 0 * 2, ANALOG_MODE, 2);
 	SET_BITS(GPIOA->MODER, 1 * 2, ANALOG_MODE, 2);
 
+	SET_BITS(GPIOC->MODER, 0 * 2, ANALOG_MODE, 2);
+	SET_BITS(GPIOC->MODER, 1 * 2, ANALOG_MODE, 2);
+
 	SET_BITS(GPIOA->PUPDR, 0 * 2, NOPULL, 2);
 	SET_BITS(GPIOA->PUPDR, 1 * 2, NOPULL, 2);
 
+	SET_BITS(GPIOC->PUPDR, 0 * 2, NOPULL, 2);
+	SET_BITS(GPIOC->PUPDR, 1 * 2, NOPULL, 2);
+
 	//Change Injected channel sequence length to 2 conversions
-	SET_BITS(ADC1->JSQR, 0, 1, 2);
+	SET_BITS(ADC1->JSQR, 0, 3, 4);
 
 	//Add channels to sequence
 	SET_BITS(ADC1->JSQR, 8, 5, 4);
 	SET_BITS(ADC1->JSQR, 14, 6, 4);
+	SET_BITS(ADC1->JSQR, 20, 1, 4);
+	SET_BITS(ADC1->JSQR, 26, 2, 4);
 
 	//Disable Deep-power-down for ADC
 	ADC1->CR &= ~(1 << 29);

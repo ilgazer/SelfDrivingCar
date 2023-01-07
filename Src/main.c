@@ -39,18 +39,19 @@ void ADC1_2_IRQHandler() {
 
 
 void EXTI15_IRQHandler() {
-	set_mode(HARD_STOP);
+	driver_stop();
 	SET(EXTI->FPR1, 15);
 }
 
 int main(void) {
+	init_mode(AUTO_WAIT);
 	init_motors();
 
 	init_leds();
 	set_led_direction(LED_STOP);
 	initialize_adc();
-	set_mode(MANUAL);
 	while (1) {
+//		set_led_direction(LED_STOP);
 	    for(int i=0; i<=3330; i++);
 		SET(ADC1->CR, ADC_JADSTART);
 	}

@@ -44,7 +44,7 @@ static const uint16_t set_vals[] = {0,0b0011, 0b1100, 0, 0};
 
 static uint8_t even = 0;
 
-static led_direction prev_led_direction = LED_STOP;
+static led_direction prev_led_direction = -1;
 static uint16_t blink_val = 0;
 void set_led_direction(led_direction d) {
 	if (d != prev_led_direction) {
