@@ -25,43 +25,22 @@
 #include "motors.h"
 #include "joystick.h"
 #include "leds.h"
+#include "drive.h"
 #include "board/adc.h"
 #include "board/exti.h"
 
 
-int joystick_x_calib = -1;
-int joystick_y_calib = -1;
+
 void ADC1_2_IRQHandler() {
-	if(joystick_x_calib == -1){
-		joystick_y_calib = ADC1->JDR1;
-		joystick_x_calib = ADC1->JDR2;
-	}
 
-	uint32_t joystick_y = ADC1->JDR1;
-	uint32_t joystick_x = ADC1->JDR2;
-
-	if (joystick_y < 4096 / 3) {
-		set_led_direction(LED_LEFT);
-	} else if (joystick_y > 8192 / 3) {
-		set_led_direction(LED_RIGHT);
-	} else if (joystick_x < 4096 / 3) {
-		set_led_direction(LED_FORWARD);
-	} else if (joystick_x > 8192 / 3) {
-		set_led_direction(LED_BACK);
-	} else {
-		set_led_direction(LED_STOP);
-	}
-
-	set_speed(joystick_x - joystick_x_calib);
-	set_direction(joystick_y - joystick_y_calib);
-
+	drive();
 	SET(ADC1->ISR, ADC_JEOS);
 }
 
 
 void EXTI15_IRQHandler() {
-	stop();
-	RESET(EXTI->FPR1, 15);
+	set_mode(HARD_STOP);
+	SET(EXTI->FPR1, 15);
 }
 
 int main(void) {
@@ -70,8 +49,9 @@ int main(void) {
 	init_leds();
 	set_led_direction(LED_STOP);
 	initialize_adc();
+	set_mode(MANUAL);
 	while (1) {
-	    for(int i=0; i<=33300; i++);
+	    for(int i=0; i<=3330; i++);
 		SET(ADC1->CR, ADC_JADSTART);
 	}
 }
