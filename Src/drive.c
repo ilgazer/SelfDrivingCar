@@ -3,6 +3,7 @@
 #include "board/adc.h"
 #include "leds.h"
 #include "motors.h"
+#include "ultrasonic.h"
 
 int joystick_x_calib = -1;
 int joystick_y_calib = -1;
@@ -27,9 +28,9 @@ void drive_override() {
 	uint32_t joystick_x = ADC1->JDR2;
 
 	if (joystick_y < 4096 / 3) {
-		set_led_direction(LED_LEFT);
-	} else if (joystick_y > 8192 / 3) {
 		set_led_direction(LED_RIGHT);
+	} else if (joystick_y > 8192 / 3) {
+		set_led_direction(LED_LEFT);
 	} else if (joystick_x < 4096 / 3) {
 		set_led_direction(LED_FORWARD);
 	} else if (joystick_x > 8192 / 3) {
@@ -37,9 +38,14 @@ void drive_override() {
 	} else {
 		set_led_direction(LED_STOP);
 	}
-
-	set_speed( joystick_x_calib - joystick_x);
-	set_direction(joystick_y_calib - joystick_y);
+	int speed = joystick_x_calib - joystick_x ;
+	if (speed < 200 && speed > -200)
+		speed = 0;
+	int direction = joystick_y - joystick_y_calib;
+	if(direction < 200 && direction > -200)
+		direction = 0;
+	set_speed( speed);
+	set_direction(direction);
 }
 void drive_hard_stop() {
 	stop();
@@ -47,15 +53,15 @@ void drive_hard_stop() {
 	uint32_t joystick_y = ADC1->JDR1;
 	uint32_t joystick_x = ADC1->JDR2;
 
-	if ((joystick_y > joystick_y_calib - 100)
-			&& (joystick_y < joystick_y_calib + 100)
-			&& (joystick_x > joystick_x_calib - 100)
-			&& (joystick_x < joystick_x_calib + 100)
-
-			) {
-		set_mode(MANUAL_OVERRIDE);
-		enable();
-	}
+//	if ((joystick_y > joystick_y_calib - 100)
+//			&& (joystick_y < joystick_y_calib + 100)
+//			&& (joystick_x > joystick_x_calib - 100)
+//			&& (joystick_x < joystick_x_calib + 100)
+//
+//			) {
+//		mode = (MANUAL_OVERRIDE);
+//		enable();
+//	}
 }
 void drive_manual() {
 	if (1) { //check distance here
@@ -106,18 +112,37 @@ void auto_wait(){
 	}
 }
 void auto_stop(){
+	set_led_direction(LED_STOP);
 	stop();
 	mode = AUTO_STOP;
 }
 void driver_stop(){
 	set_led_direction(LED_STOP);
 	if(mode <= HARD_STOP){
-		drive_hard_stop();
+		mode = HARD_STOP;
 	}else{
-		auto_stop();
+		mode = AUTO_STOP;
+	}
+}
+void joystick_button_handler(){
+	if(mode <= HARD_STOP){
+		set_mode(MANUAL_OVERRIDE);
+		enable();
+	}else{
+		set_mode(AUTO_STOP);
 	}
 }
 void drive() {
+	static uint8_t disarm_manual_counter = 0;
+	if((get_distance() < 12) && (mode != MANUAL_OVERRIDE)){
+		driver_stop();
+	}else if((get_distance() > 12) && (mode == MANUAL_OVERRIDE)){
+		disarm_manual_counter += 1;
+		if(disarm_manual_counter > 4){
+			mode = MANUAL;
+			disarm_manual_counter = 0;
+		}
+	}
 	switch (mode) {
 	case MANUAL:
 		drive_manual();
