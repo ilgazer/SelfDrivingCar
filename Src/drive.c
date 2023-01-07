@@ -1,7 +1,9 @@
-
 #include "drive.h"
 
-static uint8_t mode;
+#include "board/adc.h"
+#include "leds.h"
+#include "motors.h"
+
 int joystick_x_calib = -1;
 int joystick_y_calib = -1;
 
@@ -10,6 +12,7 @@ void set_mode(uint8_t to_mode) {
 	mode = to_mode;
 	drive();
 }
+
 void drive_override() {
 	if (joystick_x_calib == -1) {
 		joystick_y_calib = ADC1->JDR1;
@@ -72,3 +75,4 @@ void drive() {
 		break;
 	}
 }
+

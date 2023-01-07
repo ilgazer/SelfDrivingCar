@@ -63,6 +63,8 @@ typedef struct {
 #define BIE		7
 #define TIE		6
 #define COMIE	5
+#define CC4IE	4
+#define CC3IE	3
 #define CC2IE	2
 #define CC1IE	1
 #define UIE		0
@@ -73,6 +75,8 @@ typedef struct {
 #define BIF		7
 #define TIF		6
 #define COMIF		5
+#define CC4IF		4
+#define CC3IF		3
 #define CC2IF		2
 #define CC1IF		1
 #define UIF		0
@@ -107,6 +111,39 @@ typedef struct {
 #define OC1M3		16
 #define OC2M3		24
 
+//CCMR2 output compare
+// CC3S [1:0]
+#define CC3S 		0
+#define OC3FE		2
+#define OC3PE		3
+// OC3M [2:0]
+#define OC3M 		4
+#define OC3CE		7
+// CC4S [1:0]
+#define CC4S 		8
+#define OC4FE		10
+#define OC4PE		11
+// OC4M [2:0]
+#define OC4M 		12
+#define O24CE		15
+#define OC3M3		16
+#define OC4M3		24
+
+//CCMR2 input capture
+// CC3S [1:0]
+#define CC3S 		0
+// IC3 PSC [1:0]
+#define IC3 PSC 		2
+// IC3F[3:0]
+#define IC3F		4
+// CC4S [1:0]
+#define CC4S 		8
+// IC4 PSC [1:0]
+#define IC4 PSC 		10
+// IC4F[3:0]
+#define IC4F		12
+
+
 //OCxM modes
 #define OCxM_PWM1 0b110
 #define OCxM_PWM2 0b111
@@ -115,24 +152,38 @@ typedef struct {
 #define CCx_OUTPUT 		0
 #define CCx_INPUT_TI1	1
 #define CCx_INPUT_TI2	2
+#define CCx_INPUT_TI3	1
+#define CCx_INPUT_TI4	2
 #define CCx_INPUT_TRC	3
 
 //CCER
 #define CC1E		0
 #define CC1P		1
-#define CC1NE		2
+#define CC1NE		3
 #define CC1NP		3
 #define CC2E		4
 #define CC2P		5
 #define CC2NP		7
+#define CC3E		8
+#define CC3P		9
+#define CC3NP		11
+#define CC4E		12
+#define CC4P		13
+#define CC4NP		15
 
 //Timers
+#define TIM7            ((TIM_t *)	0x40001400)
+#define TIM6            ((TIM_t *)	0x40001000)
 #define TIM5            ((TIM_t *)	0x40000C00)
 #define TIM4            ((TIM_t *)	0x40000800)
 #define TIM3            ((TIM_t *)	0x40000400)
 #define TIM2            ((TIM_t *)	0x40000000)
+
 #define TIM15			((TIM_t *)	0x40014000)
 #define TIM16			((TIM_t *)	0x40014400)
+
+
+
 
 
 #endif /* TIMER_H_ */
