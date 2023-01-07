@@ -6,7 +6,6 @@
 #include "board/iser.h"
 #include "board/adc.h"
 
-
 //PB0 front right
 //PB1 front left
 //PB2 back right
@@ -40,39 +39,30 @@ void init_leds() {
 	init_TIM3();
 }
 
-static uint16_t blink_mask = 0;
-void set_led_direction(led_direction d) {
-	static uint16_t set_mask = 0;
-
-	switch (d) {
-	case LED_RIGHT:
-		set_mask = 0;
-		blink_mask = 0b0101;
-		break;
-	case LED_LEFT:
-		set_mask = 0;
-		blink_mask = 0b1010;
-		break;
-	case LED_FORWARD:
-		set_mask = 0b0011;
-		blink_mask = 0;
-		break;
-	case LED_BACK:
-		set_mask = 0b1100;
-		blink_mask = 0;
-		break;
-	case LED_STOP:
-		blink_mask = 0;
-		set_mask = 0;
-		break;
-	}
-	GPIOC->BSRR = (0b1111 ^ blink_mask) << (8 + 0);
-	GPIOC->BSRR = set_mask << (8 + 16);
-}
+static const uint16_t blink_vals[] = {0, 0, 0, 0b0101, 0b1010};
+static const uint16_t set_vals[] = {0,0b0011, 0b1100, 0, 0};
 
 static uint8_t even = 0;
+
+static led_direction prev_led_direction = LED_STOP;
+static uint16_t blink_val = 0;
+void set_led_direction(led_direction d) {
+	if (d != prev_led_direction) {
+		prev_led_direction = d;
+
+		TIM3->CNT = 0;
+
+		GPIOC->BSRR = 0b1111 << 8;
+		GPIOC->BSRR = set_vals[d] << (8 + 16);
+		blink_val = blink_vals[d];
+
+		even = 16;
+		TIM3->CNT = TIM3->ARR - 2;
+	}
+}
+
 void TIM3_IRQHandler(void) {
-	GPIOC->BSRR = blink_mask << (8 + even);
+	GPIOC->BSRR = blink_val << (8 + even);
 	even = 16 - even;
 
 	TIM3->SR = 0; //clear UIF
