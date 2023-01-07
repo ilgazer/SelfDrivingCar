@@ -8,7 +8,7 @@
 #ifndef LEDS_H_
 #define LEDS_H_
 
-typedef enum {LED_STOP, LED_FORWARD, LED_RIGHT, LED_BACK, LED_LEFT} led_direction;
+typedef enum {LED_STOP, LED_FORWARD, LED_BACK, LED_RIGHT, LED_LEFT} led_direction;
 
 void init_TIM3();
 void TIM3_IRQHandler(void);
