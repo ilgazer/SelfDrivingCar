@@ -106,8 +106,7 @@ void auto_wait(){
 	}
 }
 void auto_stop(){
-	set_speed(0);
-	set_direction(0);
+	stop();
 	mode = AUTO_STOP;
 }
 void driver_stop(){
