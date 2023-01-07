@@ -43,6 +43,19 @@ void EXTI15_IRQHandler() {
 	SET(EXTI->FPR1, 15);
 }
 
+void EXTI13_IRQHandler() {
+	static int auto_mode = 0;
+
+	if(auto_mode){
+		auto_mode = 1;
+		set_mode(MANUAL);
+	}else{
+		init_mode(AUTO_WAIT);
+		auto_mode = 0;
+	}
+	SET(EXTI->FPR1, 13);
+}
+
 int main(void) {
 	init_mode(AUTO_WAIT);
 	init_motors();
