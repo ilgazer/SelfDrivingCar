@@ -14,6 +14,8 @@
 #include "leds.h"
 #include "motors.h"
 
+#include <stdint.h>
+
 void set_mode(uint8_t mode);
 void init_mode(uint8_t mode);
 void drive();
