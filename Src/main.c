@@ -26,6 +26,8 @@
 #include "joystick.h"
 #include "leds.h"
 #include "board/adc.h"
+#include "board/exti.h"
+
 
 int joystick_x_calib = -1;
 int joystick_y_calib = -1;
@@ -54,6 +56,12 @@ void ADC1_2_IRQHandler() {
 	set_direction(joystick_y - joystick_y_calib);
 
 	SET(ADC1->ISR, ADC_JEOS);
+}
+
+
+void EXTI15_IRQHandler() {
+	stop();
+	RESET(EXTI->FPR1, 15);
 }
 
 int main(void) {

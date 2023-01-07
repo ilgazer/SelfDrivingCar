@@ -2,13 +2,15 @@
 #include "board/rcc.h"
 #include "board/gpio.h"
 #include "board/iser.h"
+#include "board/exti.h"
 
+
+//PA0, PA1 joystick inputs
+//PE15 push button interrupt
 void initialize_adc() {
 	ADC_shared->CCR |= (0b1011 << 18);
 	//Enable Clock for GPIO
 	SET(RCC_AHB2ENR, GPIOAEN);
-	SET(RCC_AHB2ENR, GPIOBEN);
-	SET(RCC_AHB2ENR, GPIOCEN);
 
 	//Enable Clock for ADC
 	SET(RCC_AHB2ENR, ADCEN);
@@ -53,4 +55,18 @@ void initialize_adc() {
 
 	//Start regular conversion of ADC1
 	SET(ADC1->CR, ADC_JADSTART);
+
+
+	//Push button
+	SET(RCC_AHB2ENR, GPIOEEN);
+
+	SET_BITS(GPIOE->MODER, 15 * 2, INPUT_MODE, 2);
+	SET_BITS(GPIOE->PUPDR, 15 * 2, PULLUP, 2);
+
+	EXTI->EXTISR[15] = 4;
+	SET(EXTI->IMR1, 15);
+	SET(EXTI->FTSR1, 15);
+	SET(ISER0, 26);
 }
+
+
