@@ -68,18 +68,6 @@ void initialize_adc() {
 
 	//Start regular conversion of ADC1
 	SET(ADC1->CR, ADC_JADSTART);
-
-
-	//Push button
-	SET(RCC_AHB2ENR, GPIOEEN);
-
-	SET_BITS(GPIOE->MODER, 15 * 2, INPUT_MODE, 2);
-	SET_BITS(GPIOE->PUPDR, 15 * 2, PULLUP, 2);
-
-	EXTI->EXTISR[15] = 4;
-	SET(EXTI->IMR1, 15);
-	SET(EXTI->FTSR1, 15);
-	SET(ISER0, 26);
 }
 
 
