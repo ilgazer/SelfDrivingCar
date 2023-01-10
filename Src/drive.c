@@ -16,15 +16,16 @@ void set_mode(uint8_t to_mode) {
 	mode = to_mode;
 	drive();
 }
-
+static uint32_t joystick_x;
+static uint32_t joystick_y;
 void drive_override() {
 	if (joystick_x_calib == -1) {
 		joystick_y_calib = ADC1->JDR1;
 		joystick_x_calib = ADC1->JDR2;
 	}
 
-	uint32_t joystick_y = ADC1->JDR1;
-	uint32_t joystick_x = ADC1->JDR2;
+	joystick_y = ADC1->JDR1;
+	joystick_x = ADC1->JDR2;
 
 	if (joystick_y < 4096 / 3) {
 		set_led_direction(LED_LEFT);
@@ -38,7 +39,7 @@ void drive_override() {
 		set_led_direction(LED_STOP);
 	}
 
-	set_speed( joystick_x_calib - joystick_x);
+	set_speed(joystick_x_calib - joystick_x);
 	set_direction(joystick_y_calib - joystick_y);
 }
 void drive_hard_stop() {
@@ -73,7 +74,7 @@ void drive_auto() {
 	uint32_t LDR_right = ADC1->JDR3 - LDR_right_calib;
 	uint32_t LDR_left = ADC1->JDR4 - LDR_left_calib;
 
-	int direction = (LDR_right - LDR_left) * 10  ;
+	int direction = (LDR_right - LDR_left) * 10;
 	if (direction < -500) {
 		set_direction(direction > -1500 ? direction : -1500);
 		set_led_direction(LED_RIGHT);
@@ -87,7 +88,7 @@ void drive_auto() {
 	set_speed(2000);
 
 }
-void auto_wait(){
+void auto_wait() {
 	if (joystick_x_calib == -1) {
 		joystick_y_calib = ADC1->JDR1;
 		joystick_x_calib = ADC1->JDR2;
@@ -101,19 +102,19 @@ void auto_wait(){
 	set_direction(0);
 	set_speed(0);
 	if (joystick_x < 4096 / 3) {
-			mode = AUTO;
-			drive_auto();
+		mode = AUTO;
+		drive_auto();
 	}
 }
-void auto_stop(){
+void auto_stop() {
 	stop();
 	mode = AUTO_STOP;
 }
-void driver_stop(){
+void driver_stop() {
 	set_led_direction(LED_STOP);
-	if(mode <= HARD_STOP){
+	if (mode <= HARD_STOP) {
 		drive_hard_stop();
-	}else{
+	} else {
 		auto_stop();
 	}
 }

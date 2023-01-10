@@ -8,7 +8,6 @@
 #define HARD_STOP 3
 #define AUTO_STOP 4
 #define AUTO_WAIT 5
-#define AUTO_STOP 6
 #define AUTO 7
 #include "board/adc.h"
 #include "leds.h"
