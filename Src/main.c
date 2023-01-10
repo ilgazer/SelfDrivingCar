@@ -61,30 +61,31 @@ void ADC1_2_IRQHandler() {
 
 
 void EXTI15_IRQHandler() {
-	driver_stop();
+	joystick_button_handler();
 	SET(EXTI->FPR1, 15);
 }
 
 void EXTI13_IRQHandler() {
 	static int auto_mode = 0;
-
+	enable();
 	if(auto_mode){
-		auto_mode = 1;
+		auto_mode = 0;
 		set_mode(MANUAL);
 	}else{
 		init_mode(AUTO_WAIT);
-		auto_mode = 0;
+		auto_mode = 1;
 	}
-	SET(EXTI->FPR1, 13);
+	SET(EXTI->RPR1, 13);
 }
 
 int main(void) {
-	init_mode(AUTO_WAIT);
+	init_mode(MANUAL);
 	init_motors();
-
+	init_extis();
 	init_leds();
 	set_led_direction(LED_STOP);
 	initialize_adc();
+	init_ultrasonic();
 	while (1) {
 //		set_led_direction(LED_STOP);
 	    for(int i=0; i<=3330; i++);

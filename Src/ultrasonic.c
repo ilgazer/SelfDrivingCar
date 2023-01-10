@@ -62,7 +62,7 @@ void init_ultrasonic() {
 	TIM3->EGR |= 1;
 }
 
-static int ultrasonic_distance;
+static int ultrasonic_distance =1000;
 void TIM3_IRQHandler(void) {
 	ultrasonic_distance = (TIM3->CCR4 - TIM3->CCR3) / 58;
 
