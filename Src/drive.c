@@ -5,8 +5,10 @@
 #include "motors.h"
 #include "ultrasonic.h"
 
-int joystick_x_calib = -1;
-int joystick_y_calib = -1;
+static uint16_t joystick_x_calib = 0;
+static uint16_t joystick_y_calib = 0;
+static uint16_t joystick_y = 0;
+static uint16_t joystick_x = 0;
 
 static uint8_t mode;
 
@@ -52,8 +54,8 @@ void drive_override() {
 void drive_hard_stop() {
 	stop();
 	set_led_direction(LED_STOP);
-	uint32_t joystick_y = ADC1->JDR1;
-	uint32_t joystick_x = ADC1->JDR2;
+	joystick_y = ADC1->JDR1;
+	joystick_x = ADC1->JDR2;
 
 //	if ((joystick_y > joystick_y_calib - 100)
 //			&& (joystick_y < joystick_y_calib + 100)
@@ -75,18 +77,22 @@ void drive_manual() {
 
 }
 
-static uint32_t LDR_right_calib = -1;
-static uint32_t LDR_left_calib = -1;
+static uint32_t LDR_right_calib = 0;
+static uint32_t LDR_left_calib = 0;
+static uint16_t LDR_right;
+static uint16_t LDR_left;
+static int auto_direction;
+static
 void drive_auto() {
-	uint32_t LDR_right = ADC1->JDR3 - LDR_right_calib;
-	uint32_t LDR_left = ADC1->JDR4 - LDR_left_calib;
+	LDR_right = ADC1->JDR3 ;
+	LDR_left = ADC1->JDR4 ;
 
-	int direction = (LDR_right - LDR_left) * 10;
-	if (direction < -500) {
-		set_direction(direction > -1500 ? direction : -1500);
+	auto_direction = ((LDR_right- LDR_right_calib) - (LDR_left- LDR_left_calib)) * 5  ;
+	if (auto_direction < -500) {
+		set_direction(auto_direction > -1500 ? auto_direction : -1500);
 		set_led_direction(LED_RIGHT);
-	} else if (direction > 500) {
-		set_direction(direction < 1500 ? direction : 1500);
+	} else if (auto_direction > 500) {
+		set_direction(auto_direction < 1500 ? auto_direction : 1500);
 		set_led_direction(LED_LEFT);
 	} else {
 		set_direction(0);
@@ -95,16 +101,16 @@ void drive_auto() {
 	set_speed(2000);
 
 }
-void auto_wait() {
-	if (joystick_x_calib == -1) {
+void auto_wait(){
+	if (joystick_x_calib < 1000) {
 		joystick_y_calib = ADC1->JDR1;
 		joystick_x_calib = ADC1->JDR2;
 	}
-	if (LDR_left_calib == -1) {
+	if (LDR_left_calib == 0) {
 		LDR_right_calib = ADC1->JDR3;
 		LDR_left_calib = ADC1->JDR4;
 	}
-	uint32_t joystick_x = ADC1->JDR2;
+	joystick_x = ADC1->JDR2;
 	set_led_direction(LED_STOP);
 	set_direction(0);
 	set_speed(0);
