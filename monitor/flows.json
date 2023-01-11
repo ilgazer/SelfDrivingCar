@@ -1,0 +1,1399 @@
+[
+    {
+        "id": "7b9ed63e.2138f8",
+        "type": "tab",
+        "label": "Basic_Flow",
+        "disabled": false,
+        "info": "# Basic flow to start with STM32CubeMonitor."
+    },
+    {
+        "id": "1ebbb430.dac7dc",
+        "type": "ui_chartst",
+        "z": "7b9ed63e.2138f8",
+        "group": "f9c34dde.1e2f4",
+        "name": "myChart",
+        "order": 4,
+        "width": 15,
+        "height": 9,
+        "chartType": "line",
+        "curveType": "linear",
+        "duration": "10",
+        "ymin": "",
+        "ymax": "",
+        "x": 560,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "6013fb0b.5b7504",
+        "type": "acquisition out",
+        "z": "7b9ed63e.2138f8",
+        "name": "myProbe_Out",
+        "probeconfig": "f293c15e381a552a",
+        "x": 540,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "4a573fb0.4bc99",
+        "type": "acquisition in",
+        "z": "7b9ed63e.2138f8",
+        "name": "myProbe_In",
+        "probeconfig": "f293c15e381a552a",
+        "x": 110,
+        "y": 900,
+        "wires": [
+            [
+                "56f8dc6f46b5b7af"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "d59587ff.cd1748",
+        "type": "variables",
+        "z": "7b9ed63e.2138f8",
+        "groupname": "joystick",
+        "accesspoint": 0,
+        "execonfig": "ca8f42f531d71acb",
+        "variablelist": [],
+        "triggerstartmode": "manual",
+        "triggername": "joystick_x_calib",
+        "triggerthreshold": "30000",
+        "frequency": "",
+        "frequencyType": "0",
+        "snapshotheader": "",
+        "mode": "direct",
+        "lastImportedTime": 1673429659728,
+        "openStatus": true,
+        "x": 320,
+        "y": 120,
+        "wires": [
+            [
+                "6013fb0b.5b7504"
+            ],
+            [
+                "f14d0398.f1861"
+            ]
+        ]
+    },
+    {
+        "id": "fc00295e.79ada8",
+        "type": "ui_button",
+        "z": "7b9ed63e.2138f8",
+        "name": "",
+        "group": "f9c34dde.1e2f4",
+        "order": 3,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "label": "Clear Graphs",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "clear",
+        "topicType": "str",
+        "x": 410,
+        "y": 1000,
+        "wires": [
+            [
+                "1ebbb430.dac7dc"
+            ]
+        ]
+    },
+    {
+        "id": "5fd51c96.2330e4",
+        "type": "ui_button",
+        "z": "7b9ed63e.2138f8",
+        "name": "",
+        "group": "f9c34dde.1e2f4",
+        "order": 1,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "label": "START Acquisition",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "start",
+        "x": 90,
+        "y": 360,
+        "wires": [
+            [
+                "d59587ff.cd1748",
+                "fa43444b51af5899",
+                "62032c4c83aace80",
+                "5164b92d56d73854",
+                "7bb65e2eedadcd23"
+            ]
+        ]
+    },
+    {
+        "id": "52eadfe3.2c8cc",
+        "type": "ui_button",
+        "z": "7b9ed63e.2138f8",
+        "name": "",
+        "group": "f9c34dde.1e2f4",
+        "order": 2,
+        "width": 5,
+        "height": 1,
+        "passthru": true,
+        "label": "STOP Acquisition",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "stop",
+        "x": 90,
+        "y": 440,
+        "wires": [
+            [
+                "d59587ff.cd1748",
+                "fa43444b51af5899",
+                "62032c4c83aace80",
+                "5164b92d56d73854",
+                "7bb65e2eedadcd23"
+            ]
+        ]
+    },
+    {
+        "id": "f14d0398.f1861",
+        "type": "ui_toast",
+        "z": "7b9ed63e.2138f8",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "topic": "",
+        "name": "",
+        "x": 530,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "add2d13ecd11f043",
+        "type": "ui_chartst",
+        "z": "7b9ed63e.2138f8",
+        "group": "f9c34dde.1e2f4",
+        "name": "myChart",
+        "order": 4,
+        "width": 15,
+        "height": 9,
+        "chartType": "line",
+        "curveType": "linear",
+        "duration": "10",
+        "ymin": "",
+        "ymax": "",
+        "x": 540,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "9b5a0968660fd01e",
+        "type": "acquisition in",
+        "z": "7b9ed63e.2138f8",
+        "name": "myProbe_In",
+        "probeconfig": "f293c15e381a552a",
+        "x": 90,
+        "y": 1080,
+        "wires": [
+            [
+                "ab8e7d149412ee96"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "23d15c10f5d3dd42",
+        "type": "ui_button",
+        "z": "7b9ed63e.2138f8",
+        "name": "",
+        "group": "f9c34dde.1e2f4",
+        "order": 3,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "label": "Clear Graphs",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "clear",
+        "x": 390,
+        "y": 1180,
+        "wires": [
+            [
+                "add2d13ecd11f043"
+            ]
+        ]
+    },
+    {
+        "id": "ab8e7d149412ee96",
+        "type": "processing",
+        "z": "7b9ed63e.2138f8",
+        "groupname": "joystick",
+        "groupid": "d59587ff.cd1748",
+        "expressions": [],
+        "statistics": [],
+        "logmode": "no",
+        "logformat": "stcm",
+        "x": 340,
+        "y": 1080,
+        "wires": [
+            [
+                "add2d13ecd11f043"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "56f8dc6f46b5b7af",
+        "type": "processing",
+        "z": "7b9ed63e.2138f8",
+        "groupname": "mode",
+        "groupid": "fa43444b51af5899",
+        "expressions": [],
+        "statistics": [],
+        "logmode": "no",
+        "logformat": "stcm",
+        "x": 320,
+        "y": 900,
+        "wires": [
+            [
+                "1ebbb430.dac7dc"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "c5511b109369c858",
+        "type": "acquisition out",
+        "z": "7b9ed63e.2138f8",
+        "name": "myProbe_Out",
+        "probeconfig": "f293c15e381a552a",
+        "x": 560,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "fa43444b51af5899",
+        "type": "variables",
+        "z": "7b9ed63e.2138f8",
+        "groupname": "mode",
+        "accesspoint": 0,
+        "execonfig": "dff37d4fb3728a4b",
+        "variablelist": [],
+        "triggerstartmode": "manual",
+        "triggername": "mode",
+        "triggerthreshold": "30000",
+        "frequency": "",
+        "frequencyType": "0",
+        "snapshotheader": "",
+        "mode": "direct",
+        "lastImportedTime": 1673250816170,
+        "openStatus": true,
+        "x": 330,
+        "y": 320,
+        "wires": [
+            [
+                "c5511b109369c858"
+            ],
+            [
+                "0f6842e99d5b346e"
+            ]
+        ]
+    },
+    {
+        "id": "0f6842e99d5b346e",
+        "type": "ui_toast",
+        "z": "7b9ed63e.2138f8",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "topic": "",
+        "name": "",
+        "x": 560,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "63a1b0ff0954270c",
+        "type": "acquisition out",
+        "z": "7b9ed63e.2138f8",
+        "name": "myProbe_Out",
+        "probeconfig": "f293c15e381a552a",
+        "x": 540,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "62032c4c83aace80",
+        "type": "variables",
+        "z": "7b9ed63e.2138f8",
+        "groupname": "LDR",
+        "accesspoint": 0,
+        "execonfig": "c3dd8852180a6ace",
+        "variablelist": [],
+        "triggerstartmode": "manual",
+        "triggername": "LDR_left_calib",
+        "triggerthreshold": "30000",
+        "frequency": "",
+        "frequencyType": "0",
+        "snapshotheader": "",
+        "mode": "direct",
+        "lastImportedTime": 1673429985851,
+        "openStatus": true,
+        "x": 310,
+        "y": 460,
+        "wires": [
+            [
+                "63a1b0ff0954270c"
+            ],
+            [
+                "708c448eca6c1790"
+            ]
+        ]
+    },
+    {
+        "id": "708c448eca6c1790",
+        "type": "ui_toast",
+        "z": "7b9ed63e.2138f8",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "topic": "",
+        "name": "",
+        "x": 530,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "7335e59782e088f9",
+        "type": "ui_chartst",
+        "z": "7b9ed63e.2138f8",
+        "group": "f9c34dde.1e2f4",
+        "name": "myChart",
+        "order": 4,
+        "width": 15,
+        "height": 9,
+        "chartType": "line",
+        "curveType": "linear",
+        "duration": "10",
+        "ymin": "",
+        "ymax": "",
+        "x": 540,
+        "y": 1240,
+        "wires": []
+    },
+    {
+        "id": "a7f8c15314260c31",
+        "type": "acquisition in",
+        "z": "7b9ed63e.2138f8",
+        "name": "myProbe_In",
+        "probeconfig": "f293c15e381a552a",
+        "x": 90,
+        "y": 1240,
+        "wires": [
+            [
+                "676fcead909d1c7b"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "67308d012ac15889",
+        "type": "ui_button",
+        "z": "7b9ed63e.2138f8",
+        "name": "",
+        "group": "f9c34dde.1e2f4",
+        "order": 3,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "label": "Clear Graphs",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "clear",
+        "x": 390,
+        "y": 1340,
+        "wires": [
+            [
+                "7335e59782e088f9"
+            ]
+        ]
+    },
+    {
+        "id": "676fcead909d1c7b",
+        "type": "processing",
+        "z": "7b9ed63e.2138f8",
+        "groupname": "LDR",
+        "groupid": "62032c4c83aace80",
+        "expressions": [],
+        "statistics": [],
+        "logmode": "no",
+        "logformat": "stcm",
+        "x": 330,
+        "y": 1240,
+        "wires": [
+            [
+                "7335e59782e088f9"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "c0eacdf065527708",
+        "type": "acquisition out",
+        "z": "7b9ed63e.2138f8",
+        "name": "myProbe_Out",
+        "probeconfig": "f293c15e381a552a",
+        "x": 540,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "5164b92d56d73854",
+        "type": "variables",
+        "z": "7b9ed63e.2138f8",
+        "groupname": "ultrasonic",
+        "accesspoint": 0,
+        "execonfig": "fc3d036ef8c2e017",
+        "variablelist": [],
+        "triggerstartmode": "manual",
+        "triggername": "ultrasonic_distance",
+        "triggerthreshold": "30000",
+        "frequency": "",
+        "frequencyType": "0",
+        "snapshotheader": "",
+        "mode": "direct",
+        "lastImportedTime": 1673430159184,
+        "openStatus": true,
+        "x": 320,
+        "y": 600,
+        "wires": [
+            [
+                "c0eacdf065527708"
+            ],
+            [
+                "dc8ebd038c7cc2a5"
+            ]
+        ]
+    },
+    {
+        "id": "dc8ebd038c7cc2a5",
+        "type": "ui_toast",
+        "z": "7b9ed63e.2138f8",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "topic": "",
+        "name": "",
+        "x": 530,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "7d8b3eb803b2f2be",
+        "type": "ui_chartst",
+        "z": "7b9ed63e.2138f8",
+        "group": "f9c34dde.1e2f4",
+        "name": "myChart",
+        "order": 4,
+        "width": 15,
+        "height": 9,
+        "chartType": "line",
+        "curveType": "linear",
+        "duration": "10",
+        "ymin": "",
+        "ymax": "",
+        "x": 520,
+        "y": 1440,
+        "wires": []
+    },
+    {
+        "id": "49e45d232c6d8693",
+        "type": "acquisition in",
+        "z": "7b9ed63e.2138f8",
+        "name": "myProbe_In",
+        "probeconfig": "f293c15e381a552a",
+        "x": 70,
+        "y": 1440,
+        "wires": [
+            [
+                "5ad1f02d07851a9f"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "41f0a507d0a18ac9",
+        "type": "ui_button",
+        "z": "7b9ed63e.2138f8",
+        "name": "",
+        "group": "f9c34dde.1e2f4",
+        "order": 3,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "label": "Clear Graphs",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "clear",
+        "x": 370,
+        "y": 1540,
+        "wires": [
+            [
+                "7d8b3eb803b2f2be"
+            ]
+        ]
+    },
+    {
+        "id": "5ad1f02d07851a9f",
+        "type": "processing",
+        "z": "7b9ed63e.2138f8",
+        "groupname": "ultrasonic",
+        "groupid": "5164b92d56d73854",
+        "expressions": [],
+        "statistics": [],
+        "logmode": "no",
+        "logformat": "stcm",
+        "x": 320,
+        "y": 1440,
+        "wires": [
+            [
+                "7d8b3eb803b2f2be"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "18f1945d8398ddb3",
+        "type": "acquisition out",
+        "z": "7b9ed63e.2138f8",
+        "name": "myProbe_Out",
+        "probeconfig": "f293c15e381a552a",
+        "x": 540,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "7bb65e2eedadcd23",
+        "type": "variables",
+        "z": "7b9ed63e.2138f8",
+        "groupname": "direction",
+        "accesspoint": 0,
+        "execonfig": "0bf84aa3830fc872",
+        "variablelist": [],
+        "triggerstartmode": "manual",
+        "triggername": "auto_direction",
+        "triggerthreshold": "30000",
+        "frequency": "",
+        "frequencyType": "0",
+        "snapshotheader": "",
+        "mode": "direct",
+        "lastImportedTime": 1673430135987,
+        "openStatus": true,
+        "x": 320,
+        "y": 740,
+        "wires": [
+            [
+                "18f1945d8398ddb3"
+            ],
+            [
+                "c2e23b0cf07f04e4"
+            ]
+        ]
+    },
+    {
+        "id": "c2e23b0cf07f04e4",
+        "type": "ui_toast",
+        "z": "7b9ed63e.2138f8",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "topic": "",
+        "name": "",
+        "x": 530,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "7ddc5e781bda8de3",
+        "type": "ui_chartst",
+        "z": "7b9ed63e.2138f8",
+        "group": "f9c34dde.1e2f4",
+        "name": "myChart",
+        "order": 4,
+        "width": 15,
+        "height": 9,
+        "chartType": "line",
+        "curveType": "linear",
+        "duration": "10",
+        "ymin": "",
+        "ymax": "",
+        "x": 560,
+        "y": 1600,
+        "wires": []
+    },
+    {
+        "id": "05175c4e4c259805",
+        "type": "acquisition in",
+        "z": "7b9ed63e.2138f8",
+        "name": "myProbe_In",
+        "probeconfig": "f293c15e381a552a",
+        "x": 110,
+        "y": 1600,
+        "wires": [
+            [
+                "10c10b7823d50250"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "8fc12674b4af5465",
+        "type": "ui_button",
+        "z": "7b9ed63e.2138f8",
+        "name": "",
+        "group": "f9c34dde.1e2f4",
+        "order": 3,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "label": "Clear Graphs",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "clear",
+        "x": 410,
+        "y": 1700,
+        "wires": [
+            [
+                "7ddc5e781bda8de3"
+            ]
+        ]
+    },
+    {
+        "id": "10c10b7823d50250",
+        "type": "processing",
+        "z": "7b9ed63e.2138f8",
+        "groupname": "direction",
+        "groupid": "7bb65e2eedadcd23",
+        "expressions": [],
+        "statistics": [],
+        "logmode": "no",
+        "logformat": "stcm",
+        "x": 360,
+        "y": 1600,
+        "wires": [
+            [
+                "7ddc5e781bda8de3"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "f9c34dde.1e2f4",
+        "type": "ui_group",
+        "name": "Chart",
+        "tab": "17d09b07.741a55",
+        "order": 1,
+        "disp": true,
+        "width": 15,
+        "collapse": false
+    },
+    {
+        "id": "f293c15e381a552a",
+        "type": "probe",
+        "probeid": "066DFF505048878667122610",
+        "probename": "ST-Link v2-1B (...22610)",
+        "protocol": "SWD",
+        "frequency": "1.8 MHz - Default",
+        "probeproperty": "{\"SWD\":[\"4.6 MHz\",\"1.8 MHz - Default\",\"950 kHz\",\"400 kHz\",\"150 kHz\"],\"JTAG\":[\"18 MHz\",\"9 MHz\",\"4.5 MHz\",\"2.25 MHz\",\"1.12 MHz - Default\",\"560 kHz\",\"280 kHz\",\"140 kHz\"]}",
+        "probeversion": "ST Link firmware version V2.J40",
+        "connectionType": "p2p"
+    },
+    {
+        "id": "ca8f42f531d71acb",
+        "type": "exe-config",
+        "name": "443_joystick",
+        "exefile": "K:\\stm32\\cmpe443proj\\Debug\\cmpe443proj.elf",
+        "exefolder": "K:\\stm32\\cmpe443proj\\Debug",
+        "exevariablelist": [
+            {
+                "address": "0x20000044",
+                "name": "_motors_direction",
+                "type": 6
+            },
+            {
+                "address": "0x20000048",
+                "name": "_motors_is_stopped",
+                "type": 6
+            },
+            {
+                "address": "0x20000040",
+                "name": "_motors_speed",
+                "type": 6
+            },
+            {
+                "address": "0x2000003a",
+                "name": "blink_val",
+                "type": 3
+            },
+            {
+                "address": "0x0800108c",
+                "name": "blink_vals[0]",
+                "type": 3
+            },
+            {
+                "address": "0x20000039",
+                "name": "even",
+                "type": 1
+            },
+            {
+                "address": "0x2000002a",
+                "name": "joystick_x",
+                "type": 3,
+                "checked": true
+            },
+            {
+                "address": "0x20000024",
+                "name": "joystick_x_calib",
+                "type": 3,
+                "checked": true
+            },
+            {
+                "address": "0x20000028",
+                "name": "joystick_y",
+                "type": 3,
+                "checked": true
+            },
+            {
+                "address": "0x20000026",
+                "name": "joystick_y_calib",
+                "type": 3,
+                "checked": true
+            },
+            {
+                "address": "0x20000034",
+                "name": "LDR_left_calib",
+                "type": 5
+            },
+            {
+                "address": "0x20000030",
+                "name": "LDR_right_calib",
+                "type": 5
+            },
+            {
+                "address": "0x080010a4",
+                "name": "left_motor.dir_pins",
+                "type": 5
+            },
+            {
+                "address": "0x080010a8",
+                "name": "left_motor.speed",
+                "type": 5
+            },
+            {
+                "address": "0x2000002c",
+                "name": "mode",
+                "type": 1
+            },
+            {
+                "address": "0x20000000",
+                "name": "prev_led_direction",
+                "type": 2
+            },
+            {
+                "address": "0x080010ac",
+                "name": "right_motor.dir_pins",
+                "type": 5
+            },
+            {
+                "address": "0x080010b0",
+                "name": "right_motor.speed",
+                "type": 5
+            },
+            {
+                "address": "0x08001098",
+                "name": "set_vals[0]",
+                "type": 3
+            },
+            {
+                "address": "0x20000004",
+                "name": "ultrasonic_distance",
+                "type": 6
+            }
+        ],
+        "expand": false,
+        "filename": "cmpe443proj.elf",
+        "exeModifiedTime": 1673429641645,
+        "configLastUpdate": 1673429659362
+    },
+    {
+        "id": "dff37d4fb3728a4b",
+        "type": "exe-config",
+        "name": "443_mode",
+        "exefile": "K:\\stm32\\cmpe443proj\\Debug\\cmpe443proj.elf",
+        "exefolder": "K:\\stm32\\cmpe443proj\\Debug",
+        "exevariablelist": [
+            {
+                "address": "0x20000044",
+                "name": "_motors_direction",
+                "type": 6,
+                "checked": false
+            },
+            {
+                "address": "0x20000048",
+                "name": "_motors_is_stopped",
+                "type": 6,
+                "checked": false
+            },
+            {
+                "address": "0x20000040",
+                "name": "_motors_speed",
+                "type": 6,
+                "checked": false
+            },
+            {
+                "address": "0x20000038",
+                "name": "blink_val",
+                "type": 3,
+                "checked": false
+            },
+            {
+                "address": "0x08001068",
+                "name": "blink_vals[0]",
+                "type": 3,
+                "checked": false
+            },
+            {
+                "address": "0x20000036",
+                "name": "even",
+                "type": 1,
+                "checked": false
+            },
+            {
+                "address": "0x20000000",
+                "name": "joystick_x_calib",
+                "type": 6,
+                "checked": false
+            },
+            {
+                "address": "0x20000004",
+                "name": "joystick_y_calib",
+                "type": 6,
+                "checked": false
+            },
+            {
+                "address": "0x2000000c",
+                "name": "LDR_left_calib",
+                "type": 5,
+                "checked": false
+            },
+            {
+                "address": "0x20000008",
+                "name": "LDR_right_calib",
+                "type": 5,
+                "checked": false
+            },
+            {
+                "address": "0x08001080",
+                "name": "left_motor.dir_pins",
+                "type": 5,
+                "checked": false
+            },
+            {
+                "address": "0x08001084",
+                "name": "left_motor.speed",
+                "type": 5,
+                "checked": false
+            },
+            {
+                "address": "0x20000034",
+                "name": "mode",
+                "type": 1,
+                "checked": true
+            },
+            {
+                "address": "0x20000010",
+                "name": "prev_led_direction",
+                "type": 2,
+                "checked": false
+            },
+            {
+                "address": "0x08001088",
+                "name": "right_motor.dir_pins",
+                "type": 5,
+                "checked": false
+            },
+            {
+                "address": "0x0800108c",
+                "name": "right_motor.speed",
+                "type": 5,
+                "checked": false
+            },
+            {
+                "address": "0x08001074",
+                "name": "set_vals[0]",
+                "type": 3
+            },
+            {
+                "address": "0x20000014",
+                "name": "ultrasonic_distance",
+                "type": 6,
+                "checked": false
+            }
+        ],
+        "expand": false,
+        "filename": "cmpe443proj.elf",
+        "exeModifiedTime": 1673249401337,
+        "configLastUpdate": 1673250815850
+    },
+    {
+        "id": "c3dd8852180a6ace",
+        "type": "exe-config",
+        "name": "443_calibration",
+        "exefile": "K:\\stm32\\cmpe443proj\\Debug\\cmpe443proj.elf",
+        "exefolder": "K:\\stm32\\cmpe443proj\\Debug",
+        "exevariablelist": [
+            {
+                "address": "0x2000004c",
+                "name": "_motors_direction",
+                "type": 6
+            },
+            {
+                "address": "0x20000050",
+                "name": "_motors_is_stopped",
+                "type": 6
+            },
+            {
+                "address": "0x20000048",
+                "name": "_motors_speed",
+                "type": 6
+            },
+            {
+                "address": "0x2000003c",
+                "name": "auto_direction",
+                "type": 6
+            },
+            {
+                "address": "0x20000042",
+                "name": "blink_val",
+                "type": 3
+            },
+            {
+                "address": "0x080010ac",
+                "name": "blink_vals[0]",
+                "type": 3
+            },
+            {
+                "address": "0x20000041",
+                "name": "even",
+                "type": 1
+            },
+            {
+                "address": "0x2000002a",
+                "name": "joystick_x",
+                "type": 3
+            },
+            {
+                "address": "0x20000024",
+                "name": "joystick_x_calib",
+                "type": 3,
+                "checked": false
+            },
+            {
+                "address": "0x20000028",
+                "name": "joystick_y",
+                "type": 3
+            },
+            {
+                "address": "0x20000026",
+                "name": "joystick_y_calib",
+                "type": 3
+            },
+            {
+                "address": "0x2000003a",
+                "name": "LDR_left",
+                "type": 3,
+                "checked": true
+            },
+            {
+                "address": "0x20000034",
+                "name": "LDR_left_calib",
+                "type": 5,
+                "checked": true
+            },
+            {
+                "address": "0x20000038",
+                "name": "LDR_right",
+                "type": 3,
+                "checked": true
+            },
+            {
+                "address": "0x20000030",
+                "name": "LDR_right_calib",
+                "type": 5,
+                "checked": true
+            },
+            {
+                "address": "0x080010c4",
+                "name": "left_motor.dir_pins",
+                "type": 5
+            },
+            {
+                "address": "0x080010c8",
+                "name": "left_motor.speed",
+                "type": 5
+            },
+            {
+                "address": "0x2000002c",
+                "name": "mode",
+                "type": 1
+            },
+            {
+                "address": "0x20000000",
+                "name": "prev_led_direction",
+                "type": 2
+            },
+            {
+                "address": "0x080010cc",
+                "name": "right_motor.dir_pins",
+                "type": 5
+            },
+            {
+                "address": "0x080010d0",
+                "name": "right_motor.speed",
+                "type": 5
+            },
+            {
+                "address": "0x080010b8",
+                "name": "set_vals[0]",
+                "type": 3
+            },
+            {
+                "address": "0x20000004",
+                "name": "ultrasonic_distance",
+                "type": 6
+            }
+        ],
+        "expand": false,
+        "filename": "cmpe443proj.elf",
+        "exeModifiedTime": 1673429963376,
+        "configLastUpdate": 1673429985476
+    },
+    {
+        "id": "fc3d036ef8c2e017",
+        "type": "exe-config",
+        "name": "ultrasonic",
+        "exefile": "K:\\stm32\\cmpe443proj\\Debug\\cmpe443proj.elf",
+        "exefolder": "K:\\stm32\\cmpe443proj\\Debug",
+        "exevariablelist": [
+            {
+                "address": "0x2000004c",
+                "name": "_motors_direction",
+                "type": 6
+            },
+            {
+                "address": "0x20000050",
+                "name": "_motors_is_stopped",
+                "type": 6
+            },
+            {
+                "address": "0x20000048",
+                "name": "_motors_speed",
+                "type": 6
+            },
+            {
+                "address": "0x2000003c",
+                "name": "auto_direction",
+                "type": 6,
+                "checked": false
+            },
+            {
+                "address": "0x20000042",
+                "name": "blink_val",
+                "type": 3
+            },
+            {
+                "address": "0x080010ac",
+                "name": "blink_vals[0]",
+                "type": 3
+            },
+            {
+                "address": "0x20000041",
+                "name": "even",
+                "type": 1
+            },
+            {
+                "address": "0x2000002a",
+                "name": "joystick_x",
+                "type": 3
+            },
+            {
+                "address": "0x20000024",
+                "name": "joystick_x_calib",
+                "type": 3
+            },
+            {
+                "address": "0x20000028",
+                "name": "joystick_y",
+                "type": 3
+            },
+            {
+                "address": "0x20000026",
+                "name": "joystick_y_calib",
+                "type": 3
+            },
+            {
+                "address": "0x2000003a",
+                "name": "LDR_left",
+                "type": 3
+            },
+            {
+                "address": "0x20000034",
+                "name": "LDR_left_calib",
+                "type": 5
+            },
+            {
+                "address": "0x20000038",
+                "name": "LDR_right",
+                "type": 3
+            },
+            {
+                "address": "0x20000030",
+                "name": "LDR_right_calib",
+                "type": 5
+            },
+            {
+                "address": "0x080010c4",
+                "name": "left_motor.dir_pins",
+                "type": 5
+            },
+            {
+                "address": "0x080010c8",
+                "name": "left_motor.speed",
+                "type": 5
+            },
+            {
+                "address": "0x2000002c",
+                "name": "mode",
+                "type": 1
+            },
+            {
+                "address": "0x20000000",
+                "name": "prev_led_direction",
+                "type": 2
+            },
+            {
+                "address": "0x080010cc",
+                "name": "right_motor.dir_pins",
+                "type": 5
+            },
+            {
+                "address": "0x080010d0",
+                "name": "right_motor.speed",
+                "type": 5
+            },
+            {
+                "address": "0x080010b8",
+                "name": "set_vals[0]",
+                "type": 3
+            },
+            {
+                "address": "0x20000004",
+                "name": "ultrasonic_distance",
+                "type": 6,
+                "checked": true
+            }
+        ],
+        "expand": false,
+        "filename": "cmpe443proj.elf",
+        "exeModifiedTime": 1673429963376,
+        "configLastUpdate": 1673430158775
+    },
+    {
+        "id": "0bf84aa3830fc872",
+        "type": "exe-config",
+        "name": "",
+        "exefile": "K:\\stm32\\cmpe443proj\\Debug\\cmpe443proj.elf",
+        "exefolder": "K:\\stm32\\cmpe443proj\\Debug",
+        "exevariablelist": [
+            {
+                "address": "0x2000004c",
+                "name": "_motors_direction",
+                "type": 6
+            },
+            {
+                "address": "0x20000050",
+                "name": "_motors_is_stopped",
+                "type": 6
+            },
+            {
+                "address": "0x20000048",
+                "name": "_motors_speed",
+                "type": 6
+            },
+            {
+                "address": "0x2000003c",
+                "name": "auto_direction",
+                "type": 6,
+                "checked": true
+            },
+            {
+                "address": "0x20000042",
+                "name": "blink_val",
+                "type": 3
+            },
+            {
+                "address": "0x080010ac",
+                "name": "blink_vals[0]",
+                "type": 3
+            },
+            {
+                "address": "0x20000041",
+                "name": "even",
+                "type": 1
+            },
+            {
+                "address": "0x2000002a",
+                "name": "joystick_x",
+                "type": 3
+            },
+            {
+                "address": "0x20000024",
+                "name": "joystick_x_calib",
+                "type": 3
+            },
+            {
+                "address": "0x20000028",
+                "name": "joystick_y",
+                "type": 3
+            },
+            {
+                "address": "0x20000026",
+                "name": "joystick_y_calib",
+                "type": 3
+            },
+            {
+                "address": "0x2000003a",
+                "name": "LDR_left",
+                "type": 3
+            },
+            {
+                "address": "0x20000034",
+                "name": "LDR_left_calib",
+                "type": 5
+            },
+            {
+                "address": "0x20000038",
+                "name": "LDR_right",
+                "type": 3
+            },
+            {
+                "address": "0x20000030",
+                "name": "LDR_right_calib",
+                "type": 5
+            },
+            {
+                "address": "0x080010c4",
+                "name": "left_motor.dir_pins",
+                "type": 5
+            },
+            {
+                "address": "0x080010c8",
+                "name": "left_motor.speed",
+                "type": 5
+            },
+            {
+                "address": "0x2000002c",
+                "name": "mode",
+                "type": 1
+            },
+            {
+                "address": "0x20000000",
+                "name": "prev_led_direction",
+                "type": 2
+            },
+            {
+                "address": "0x080010cc",
+                "name": "right_motor.dir_pins",
+                "type": 5
+            },
+            {
+                "address": "0x080010d0",
+                "name": "right_motor.speed",
+                "type": 5
+            },
+            {
+                "address": "0x080010b8",
+                "name": "set_vals[0]",
+                "type": 3
+            },
+            {
+                "address": "0x20000004",
+                "name": "ultrasonic_distance",
+                "type": 6
+            }
+        ],
+        "expand": false,
+        "filename": "cmpe443proj.elf",
+        "exeModifiedTime": 1673429963376,
+        "configLastUpdate": 1673430135660
+    },
+    {
+        "id": "17d09b07.741a55",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
