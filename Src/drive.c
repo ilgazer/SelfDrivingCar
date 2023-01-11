@@ -20,7 +20,7 @@ void set_mode(uint8_t to_mode) {
 static uint32_t joystick_x;
 static uint32_t joystick_y;
 void drive_override() {
-	if (joystick_x_calib == -1) {
+	if (joystick_x_calib < 1000) {
 		joystick_y_calib = ADC1->JDR1;
 		joystick_x_calib = ADC1->JDR2;
 	}
@@ -120,10 +120,7 @@ void auto_stop(){
 }
 void driver_stop() {
 	set_led_direction(LED_STOP);
-	if (mode <= HARD_STOP) {
-		drive_hard_stop();
-	} else {
-		auto_stop();
+
 	if(mode <= HARD_STOP){
 		mode = HARD_STOP;
 	}else{
@@ -138,6 +135,7 @@ void joystick_button_handler(){
 		set_mode(AUTO_STOP);
 	}
 }
+
 void drive() {
 	static uint8_t disarm_manual_counter = 0;
 	if((get_distance() < 12) && (mode != MANUAL_OVERRIDE)){

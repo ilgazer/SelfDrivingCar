@@ -15,7 +15,7 @@ int _motors_is_stopped = 0;
 
 //Motor driver pin mappings
 
-//Port D
+//Port C
 #define DRV_IN1 8
 #define DRV_IN2 9
 #define DRV_IN3 10
@@ -35,7 +35,7 @@ const Motor_t right_motor = { DRV_IN3, &(TIM15->CCR2) };
 
 void init_motors() {
 	SET(RCC_AHB2ENR, GPIOAEN);
-	SET(RCC_AHB2ENR, GPIODEN);
+	SET(RCC_AHB2ENR, GPIOCEN);
 
 	SET(RCC_APB2ENR, TIM15EN);
 
@@ -57,8 +57,8 @@ void init_motors() {
 	TIM15->CCMR1 =
 			CCx_OUTPUT << CC1S |
 			CCx_OUTPUT << CC2S |
-			OCxM_PWM2 << OC1M |
-			OCxM_PWM2 << OC2M |
+			OCxM_PWM1 << OC1M |
+			OCxM_PWM1 << OC2M |
 			1 << OC1PE |
 			1 << OC2PE;
 
@@ -80,10 +80,10 @@ void init_motors() {
 
 void set_motor(Motor_t motor, int apply_brake, int value) {
 	if (apply_brake) {
-		SET_BITS(GPIOD->MODER, motor.dir_pins, 0, 2);
+		SET_BITS(GPIOC->ODR, motor.dir_pins, 0, 2);
 		*motor.speed = 0xffff;
 	} else {
-		SET_BITS(GPIOD->MODER, motor.dir_pins, (value >= 0) + 1, 2);
+		SET_BITS(GPIOC->ODR, motor.dir_pins, (value >= 0) + 1, 2);
 		*motor.speed = abs(value);
 	}
 }
