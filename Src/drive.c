@@ -19,8 +19,6 @@ void set_mode(uint8_t to_mode) {
 	mode = to_mode;
 	drive();
 }
-static uint32_t joystick_x;
-static uint32_t joystick_y;
 void drive_override() {
 	if (joystick_x_calib < 1000) {
 		joystick_y_calib = ADC1->JDR1;
@@ -135,7 +133,7 @@ void driver_stop() {
 }
 void joystick_button_handler(){
 	if(mode <= HARD_STOP){
-		set_mode(MANUAL_OVERRIDE);
+		set_mode(HARD_STOP);
 		enable();
 	}else{
 		set_mode(AUTO_STOP);
