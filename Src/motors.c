@@ -22,8 +22,8 @@ typedef struct {
 
 } Motor_t;
 
-const Motor_t right_motor = {&(TIM15->CCR1), DRV_IN2,  DRV_IN1};
-const Motor_t left_motor = {&(TIM15->CCR2), DRV_IN4,  DRV_IN3};
+const Motor_t right_motor = {&(TIM15->CCR2), DRV_IN2,  DRV_IN1};
+const Motor_t left_motor = {&(TIM15->CCR1), DRV_IN4,  DRV_IN3};
 
 void init_motors() {
 	SET(RCC_AHB2ENR, GPIOAEN);
@@ -108,4 +108,10 @@ void stop() {
 void enable(){
 	_motors_is_stopped = 0;
 	update_motors();
+}
+
+int main2(){
+	init_motors();
+	set_motor(left_motor, 0, 1000);
+	set_motor(right_motor, 1, -1000);
 }
