@@ -28,6 +28,7 @@
 #include "leds.h"
 #include "drive.h"
 #include "pins.h"
+#include "indicators.h"
 #include "board/adc.h"
 #include "board/exti.h"
 #include "ultrasonic.h"
@@ -101,6 +102,7 @@ void EXTI13_IRQHandler() {
 
 int main(void) {
 	init_mode(MANUAL);
+	init_indicators();
 	init_motors();
 	init_extis();
 	init_leds();

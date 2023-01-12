@@ -4,6 +4,7 @@
 #include "leds.h"
 #include "motors.h"
 #include "ultrasonic.h"
+#include "indicators.h"
 
 static uint16_t joystick_x_calib = 0;
 static uint16_t joystick_y_calib = 0;
@@ -12,6 +13,9 @@ static uint16_t joystick_x = 0;
 
 static uint8_t mode;
 
+uint8_t get_mode(){
+	return mode;
+}
 void init_mode(uint8_t to_mode) {
 	mode = to_mode;
 }
@@ -125,15 +129,16 @@ void drive() {
 		joystick_x_calib = joystick_x;
 	}
 	static uint8_t disarm_manual_counter = 0;
-	if((get_distance() < 12) && (mode != MANUAL_OVERRIDE)){
+	if((get_distance() < 15) && (mode != MANUAL_OVERRIDE)){
 		driver_stop();
 	}else if((get_distance() > 12) && (mode == MANUAL_OVERRIDE)){
 		disarm_manual_counter += 1;
-		if(disarm_manual_counter > 4){
+		if(disarm_manual_counter > 26){
 			mode = MANUAL;
 			disarm_manual_counter = 0;
 		}
 	}
+	set_indicators(mode);
 	switch (mode) {
 	case MANUAL:
 		drive_manual();
