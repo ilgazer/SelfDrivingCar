@@ -14,11 +14,11 @@
 void init_TIM6() {
 	SET(RCC_APB1ENR1, TIM6EN); //TIM6x_CLK is enabled, running at 4MHz
 	TIM6->EGR |= 1; //enable UIF to generate an interrupt
-	TIM6->PSC = 1999; //Set Prescaler
+	TIM6->PSC = 15999; //Set Prescaler
 	TIM6->CR1 &= ~(1 << 1); //OVF will generate an event
 
 	// TIM6 Interrupt Initialization
-	TIM6->ARR = 500;
+	TIM6->ARR = 125;
 	TIM6->SR = 0; //clear UIF if it is set
 	TIM6->DIER |= 1;
 	ISER1 |= 1 << 17; //enable global signaling for TIM6 interrupt
