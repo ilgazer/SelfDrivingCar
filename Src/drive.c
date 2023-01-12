@@ -24,10 +24,6 @@ void drive_override() {
 		joystick_y_calib = ADC1->JDR1;
 		joystick_x_calib = ADC1->JDR2;
 	}
-
-	joystick_y = ADC1->JDR1;
-	joystick_x = ADC1->JDR2;
-
 	if (joystick_y < 4096 / 3) {
 		set_led_direction(LED_RIGHT);
 	} else if (joystick_y > 8192 / 3) {
@@ -52,8 +48,6 @@ void drive_override() {
 void drive_hard_stop() {
 	stop();
 	set_led_direction(LED_STOP);
-	joystick_y = ADC1->JDR1;
-	joystick_x = ADC1->JDR2;
 
 //	if ((joystick_y > joystick_y_calib - 100)
 //			&& (joystick_y < joystick_y_calib + 100)
@@ -82,8 +76,6 @@ static uint16_t LDR_left;
 static int auto_direction;
 static
 void drive_auto() {
-	LDR_right = ADC1->JDR3 ;
-	LDR_left = ADC1->JDR4 ;
 
 	auto_direction = ((LDR_right- LDR_right_calib) - (LDR_left- LDR_left_calib)) * 5  ;
 	if (auto_direction < -500) {
@@ -108,7 +100,6 @@ void auto_wait(){
 		LDR_right_calib = ADC1->JDR3;
 		LDR_left_calib = ADC1->JDR4;
 	}
-	joystick_x = ADC1->JDR2;
 	set_led_direction(LED_STOP);
 	set_direction(0);
 	set_speed(0);
@@ -141,6 +132,10 @@ void joystick_button_handler(){
 }
 
 void drive() {
+	LDR_right = ADC1->JDR3 ;
+	LDR_left = ADC1->JDR4 ;
+	joystick_y = ADC1->JDR1;
+	joystick_x = ADC1->JDR2;
 	static uint8_t disarm_manual_counter = 0;
 	if((get_distance() < 12) && (mode != MANUAL_OVERRIDE)){
 		driver_stop();
