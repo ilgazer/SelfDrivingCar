@@ -19,11 +19,7 @@ void set_mode(uint8_t to_mode) {
 	mode = to_mode;
 	drive();
 }
-void drive_override() {
-	if (joystick_x_calib < 1000) {
-		joystick_y_calib = ADC1->JDR1;
-		joystick_x_calib = ADC1->JDR2;
-	}
+void drive_manual() {
 	if (joystick_y < 4096 / 3) {
 		set_led_direction(LED_RIGHT);
 	} else if (joystick_y > 8192 / 3) {
@@ -59,14 +55,8 @@ void drive_hard_stop() {
 //		enable();
 //	}
 }
-void drive_manual() {
-	if (1) { //check distance here
-		drive_override();
-	} else {
-		drive_hard_stop();
-		set_mode(HARD_STOP);
-	}
-}
+
+
 
 static uint32_t LDR_right_calib = 0;
 static uint32_t LDR_left_calib = 0;
@@ -76,7 +66,7 @@ static int auto_direction;
 static
 void drive_auto() {
 
-	auto_direction = ((LDR_right- LDR_right_calib) - (LDR_left- LDR_left_calib)) * 5  ;
+	auto_direction = ((LDR_right- LDR_right_calib) - (LDR_left- LDR_left_calib)) * -5  ;
 	if (auto_direction < -500) {
 		set_direction(auto_direction > -1500 ? auto_direction : -1500);
 		set_led_direction(LED_RIGHT);
@@ -91,14 +81,6 @@ void drive_auto() {
 
 }
 void auto_wait(){
-	if (joystick_x_calib < 1000) {
-		joystick_y_calib = ADC1->JDR1;
-		joystick_x_calib = ADC1->JDR2;
-	}
-	if (LDR_left_calib == 0) {
-		LDR_right_calib = ADC1->JDR3;
-		LDR_left_calib = ADC1->JDR4;
-	}
 	set_led_direction(LED_STOP);
 	set_direction(0);
 	set_speed(0);
@@ -122,7 +104,11 @@ void driver_stop() {
 	}
 }
 void joystick_button_handler(){
-	if(mode <= HARD_STOP){
+	if(mode == HARD_STOP){
+		set_mode(MANUAL_OVERRIDE);
+		enable();
+	}
+	else if(mode < HARD_STOP){
 		set_mode(HARD_STOP);
 	}else{
 		set_mode(AUTO_STOP);
@@ -134,6 +120,10 @@ void drive() {
 	LDR_left = ADC1->JDR4 ;
 	joystick_y = ADC1->JDR1;
 	joystick_x = ADC1->JDR2;
+	if (joystick_x_calib < 1000) {
+		joystick_y_calib = joystick_y;
+		joystick_x_calib = joystick_x;
+	}
 	static uint8_t disarm_manual_counter = 0;
 	if((get_distance() < 12) && (mode != MANUAL_OVERRIDE)){
 		driver_stop();
@@ -149,7 +139,7 @@ void drive() {
 		drive_manual();
 		break;
 	case MANUAL_OVERRIDE:
-		drive_override();
+		drive_manual();
 		break;
 	case HARD_STOP:
 		drive_hard_stop();
@@ -158,6 +148,10 @@ void drive() {
 		drive_auto();
 		break;
 	case AUTO_WAIT:
+		{
+			LDR_right_calib = ADC1->JDR3;
+			LDR_left_calib = ADC1->JDR4;
+		}
 		auto_wait();
 		break;
 	case AUTO_STOP:
