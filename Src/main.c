@@ -17,6 +17,7 @@
  */
 
 #include <stdint.h>
+
 #include "board/timer.h"
 #include "board/rcc.h"
 #include "board/gpio.h"
@@ -28,8 +29,10 @@
 #include "drive.h"
 #include "board/adc.h"
 #include "board/exti.h"
+#include "ultrasonic.h"
 
-void init_extis(){
+#define BUSY_WAIT 1
+void init_extis() {
 	//Push button
 	SET(RCC_AHB2ENR, GPIOEEN);
 
@@ -52,13 +55,30 @@ void init_extis(){
 	SET(EXTI->RTSR1, 13);
 	SET(ISER0, 24);
 }
+void init_TIM7() {
+	SET(RCC_APB1ENR1, TIM7EN); //TIM6x_CLK is enabled, running at 4MHz
+	TIM7->EGR |= 1; //enable UIF to generate an interrupt
+	TIM7->PSC = 15999; //Set Prescaler
+	TIM7->CR1 &= ~(1 << 1); //OVF will generate an event
 
+	// TIM6 Interrupt Initialization
+	TIM7->ARR = 5;
+	TIM7->SR = 0; //clear UIF if it is set
+	TIM7->DIER |= 1;
+	ISER1 |= 1 << 18; //enable global signaling for TIM6 interrupt
+
+	TIM7->CR1 |= 1; //TIM6_CNT is enabled (clocked)
+
+	enable_interrupts();
+}
+void TIM7_IRQHandler(void) {
+	SET(ADC1->CR, ADC_JADSTART);
+	TIM7->SR = 0; //clear UIF
+}
 void ADC1_2_IRQHandler() {
-
 	drive();
 	SET(ADC1->ISR, ADC_JEOS);
 }
-
 
 void EXTI15_IRQHandler() {
 	joystick_button_handler();
@@ -68,10 +88,10 @@ void EXTI15_IRQHandler() {
 void EXTI13_IRQHandler() {
 	static int auto_mode = 0;
 	enable();
-	if(auto_mode){
+	if (auto_mode) {
 		auto_mode = 0;
 		set_mode(MANUAL);
-	}else{
+	} else {
 		init_mode(AUTO_WAIT);
 		auto_mode = 1;
 	}
@@ -86,9 +106,16 @@ int main(void) {
 	set_led_direction(LED_STOP);
 	initialize_adc();
 	init_ultrasonic();
-	while (1) {
-//		set_led_direction(LED_STOP);
-	    for(int i=0; i<=3330; i++);
-		SET(ADC1->CR, ADC_JADSTART);
+	if (BUSY_WAIT) {
+		while (1) {
+			for (int i = 0; i < 33300; i++)
+				;
+			SET(ADC1->CR, ADC_JADSTART);
+		}
+	} else {
+		init_TIM7();
+		while (1) {
+			asm volatile("wfi");
+		}
 	}
 }
