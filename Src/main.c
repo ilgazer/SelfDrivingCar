@@ -27,33 +27,32 @@
 #include "joystick.h"
 #include "leds.h"
 #include "drive.h"
+#include "pins.h"
 #include "board/adc.h"
 #include "board/exti.h"
 #include "ultrasonic.h"
 
 #define BUSY_WAIT 1
+
 void init_extis() {
-	//Push button
-	SET(RCC_AHB2ENR, GPIOEEN);
-
-	SET_BITS(GPIOE->MODER, 15 * 2, INPUT_MODE, 2);
-	SET_BITS(GPIOE->PUPDR, 15 * 2, PULLUP, 2);
-
-	EXTI->EXTISR[15] = 4;
-	SET(EXTI->IMR1, 15);
-	SET(EXTI->FTSR1, 15);
-	SET(ISER0, 26);
-
-	//Blue button
+	SET(RCC_AHB2ENR, GPIOAEN);
 	SET(RCC_AHB2ENR, GPIOCEN);
 
-	SET_BITS(GPIOC->MODER, 13 * 2, INPUT_MODE, 2);
-	SET_BITS(GPIOC->PUPDR, 13 * 2, PULLDOWN, 2);
+	SET_BITS(GPIOA->MODER, JOY_BTN * 2, INPUT_MODE, 2);
+	SET_BITS(GPIOA->PUPDR, JOY_BTN * 2, PULLUP, 2);
 
-	EXTI->EXTISR[13] = 2;
-	SET(EXTI->IMR1, 13);
-	SET(EXTI->RTSR1, 13);
-	SET(ISER0, 24);
+	SET_BITS(GPIOC->MODER, BLUE_BTN * 2, INPUT_MODE, 2);
+	SET_BITS(GPIOC->PUPDR, BLUE_BTN * 2, PULLDOWN, 2);
+
+	EXTI->EXTISR[JOY_BTN] = 0;
+	SET(EXTI->IMR1, JOY_BTN);
+	SET(EXTI->FTSR1, JOY_BTN);
+	SET(ISER0, 11 + JOY_BTN);
+
+	EXTI->EXTISR[BLUE_BTN] = 2;
+	SET(EXTI->IMR1, BLUE_BTN);
+	SET(EXTI->RTSR1, BLUE_BTN);
+	SET(ISER0, 11 + BLUE_BTN);
 }
 void init_TIM7() {
 	SET(RCC_APB1ENR1, TIM7EN); //TIM6x_CLK is enabled, running at 4MHz
@@ -80,11 +79,13 @@ void ADC1_2_IRQHandler() {
 	SET(ADC1->ISR, ADC_JEOS);
 }
 
-void EXTI15_IRQHandler() {
+//Depends on the value of JOY_BTN
+void EXTI6_IRQHandler() {
 	joystick_button_handler();
-	SET(EXTI->FPR1, 15);
+	SET(EXTI->FPR1, JOY_BTN);
 }
 
+//Depends on the value of BLUE_BTN
 void EXTI13_IRQHandler() {
 	static int auto_mode = 0;
 	enable();
@@ -95,7 +96,7 @@ void EXTI13_IRQHandler() {
 		init_mode(AUTO_WAIT);
 		auto_mode = 1;
 	}
-	SET(EXTI->RPR1, 13);
+	SET(EXTI->RPR1, BLUE_BTN);
 }
 
 int main(void) {

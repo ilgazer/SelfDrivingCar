@@ -1,9 +1,11 @@
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <math.h>
 
 #include "motors.h"
 #include "utils.h"
+#include "pins.h"
 #include "board/timer.h"
 #include "board/rcc.h"
 #include "board/gpio.h"
@@ -13,25 +15,15 @@ int _motors_speed = 0;
 int _motors_direction = 0;
 int _motors_is_stopped = 0;
 
-//Motor driver pin mappings
-
-//Port C
-#define DRV_IN1 8
-#define DRV_IN2 9
-#define DRV_IN3 10
-#define DRV_IN4 11
-
-//Port A
-#define DRV_ENA 2 //Left
-#define DRV_ENB 3 //Right
-
 typedef struct {
-	uint32_t dir_pins;
 	volatile uint32_t *speed;
+	uint32_t dir_pin_fwd;
+	uint32_t dir_pin_back;
+
 } Motor_t;
 
-const Motor_t left_motor = { DRV_IN1, &(TIM15->CCR1) };
-const Motor_t right_motor = { DRV_IN3, &(TIM15->CCR2) };
+const Motor_t right_motor = {&(TIM15->CCR1), DRV_IN2,  DRV_IN1};
+const Motor_t left_motor = {&(TIM15->CCR2), DRV_IN4,  DRV_IN3};
 
 void init_motors() {
 	SET(RCC_AHB2ENR, GPIOAEN);
@@ -39,16 +31,16 @@ void init_motors() {
 
 	SET(RCC_APB2ENR, TIM15EN);
 
-	SET_BITS(GPIOC->MODER, DRV_IN1 * 2, OUTPUT_MODE, 2);
-	SET_BITS(GPIOC->MODER, DRV_IN2 * 2, OUTPUT_MODE, 2);
-	SET_BITS(GPIOC->MODER, DRV_IN3 * 2, OUTPUT_MODE, 2);
-	SET_BITS(GPIOC->MODER, DRV_IN4 * 2, OUTPUT_MODE, 2);
+	SET_BITS(DRV_PORT->MODER, DRV_IN1 * 2, OUTPUT_MODE, 2);
+	SET_BITS(DRV_PORT->MODER, DRV_IN2 * 2, OUTPUT_MODE, 2);
+	SET_BITS(DRV_PORT->MODER, DRV_IN3 * 2, OUTPUT_MODE, 2);
+	SET_BITS(DRV_PORT->MODER, DRV_IN4 * 2, OUTPUT_MODE, 2);
 
-	SET_BITS(GPIOA->MODER, DRV_ENA * 2, ALTERNATE_MODE, 2);
-	SET_BITS(GPIOA->AFR[0], DRV_ENA * 4, 14, 4);
+	SET_BITS(DRV_EN_PORT->MODER, DRV_ENA * 2, ALTERNATE_MODE, 2);
+	SET_BITS(DRV_EN_PORT->AFR[0], DRV_ENA * 4, 14, 4);
 
-	SET_BITS(GPIOA->MODER, DRV_ENB * 2, ALTERNATE_MODE, 2);
-	SET_BITS(GPIOA->AFR[0], DRV_ENB * 4, 14, 4);
+	SET_BITS(DRV_EN_PORT->MODER, DRV_ENB * 2, ALTERNATE_MODE, 2);
+	SET_BITS(DRV_EN_PORT->AFR[0], DRV_ENB * 4, 14, 4);
 	TIM15->PSC = 4; //Set Prescalers
 	TIM15->ARR = 4000; //Set ARR
 
@@ -78,14 +70,18 @@ void init_motors() {
 	TIM15->EGR |= 1;
 }
 
+static uint32_t gpiocodr;
 void set_motor(Motor_t motor, int apply_brake, int value) {
 	if (apply_brake) {
-		SET_BITS(GPIOC->ODR, motor.dir_pins, 0, 2);
+		SET_BIT(DRV_PORT->ODR, motor.dir_pin_fwd, 0);
+		SET_BIT(DRV_PORT->ODR, motor.dir_pin_back, 0);
 		*motor.speed = 0xffff;
 	} else {
-		SET_BITS(GPIOC->ODR, motor.dir_pins, (value >= 0) + 1, 2);
+		SET_BIT(DRV_PORT->ODR, motor.dir_pin_fwd, value >= 0 ? 1 : 0);
+		SET_BIT(DRV_PORT->ODR, motor.dir_pin_back, value < 0 ? 1 : 0);
 		*motor.speed = abs(value);
 	}
+	gpiocodr = (GPIOC->ODR >> 9) & 0b1111;
 }
 
 void update_motors() {

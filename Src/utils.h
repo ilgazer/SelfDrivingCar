@@ -10,6 +10,7 @@
 
 #define SET(REG, OFFSET) (REG) |= (1 << (OFFSET))
 #define SET_BITS(REG, OFFSET, VAL, BITS) (REG) &= ~(((1 << BITS) - 1) << (OFFSET)); (REG) |= ((VAL) << (OFFSET))
+#define SET_BIT(REG, OFFSET, VAL) SET_BITS(REG, OFFSET, VAL, 1)
 #define RESET(REG, OFFSET) (REG) &= ~(1 << (OFFSET))
 #define GET(REG, OFFSET) ((REG) | (1 << (OFFSET)))
 

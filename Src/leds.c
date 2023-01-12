@@ -1,15 +1,12 @@
 #include <stdint.h>
 #include "leds.h"
+#include "pins.h"
 #include "board/timer.h"
 #include "board/gpio.h"
 #include "board/rcc.h"
 #include "board/iser.h"
 #include "board/adc.h"
 
-//PE12 front right
-//PE13 front left
-//PE14 back right
-//PE15 back left
 
 void init_TIM6() {
 	SET(RCC_APB1ENR1, TIM6EN); //TIM6x_CLK is enabled, running at 4MHz
@@ -31,10 +28,10 @@ void init_TIM6() {
 void init_leds() {
 	SET(RCC_AHB2ENR, GPIOEEN);
 
-	SET_BITS(GPIOE->MODER, 12 * 2, OUTPUT_MODE, 2);
-	SET_BITS(GPIOE->MODER, 13 * 2, OUTPUT_MODE, 2);
-	SET_BITS(GPIOE->MODER, 14 * 2, OUTPUT_MODE, 2);
-	SET_BITS(GPIOE->MODER, 15 * 2, OUTPUT_MODE, 2);
+	SET_BITS(LED_PORT->MODER, LED_FR * 2, OUTPUT_MODE, 2);
+	SET_BITS(LED_PORT->MODER, LED_FL * 2, OUTPUT_MODE, 2);
+	SET_BITS(LED_PORT->MODER, LED_BR * 2, OUTPUT_MODE, 2);
+	SET_BITS(LED_PORT->MODER, LED_BL * 2, OUTPUT_MODE, 2);
 
 	init_TIM6();
 }
@@ -52,8 +49,8 @@ void set_led_direction(led_direction d) {
 
 		TIM6->CNT = 0;
 
-		GPIOE->BSRR = 0b1111 << (12 + 16);
-		GPIOE->BSRR = set_vals[d] << 12;
+		LED_PORT->BSRR = 0b1111 << (LED_FR + 16);
+		LED_PORT->BSRR = set_vals[d] << LED_FR;
 		blink_val = blink_vals[d];
 
 		even = 16;
@@ -62,7 +59,7 @@ void set_led_direction(led_direction d) {
 }
 
 void TIM6_IRQHandler(void) {
-	GPIOE->BSRR = blink_val << (12 + even);
+	LED_PORT->BSRR = blink_val << (LED_FR + even);
 	even = 16 - even;
 
 	TIM6->SR = 0; //clear UIF
