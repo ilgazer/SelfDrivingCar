@@ -66,7 +66,6 @@ void drive_manual() {
 		drive_hard_stop();
 		set_mode(HARD_STOP);
 	}
-
 }
 
 static uint32_t LDR_right_calib = 0;
@@ -125,7 +124,6 @@ void driver_stop() {
 void joystick_button_handler(){
 	if(mode <= HARD_STOP){
 		set_mode(HARD_STOP);
-		enable();
 	}else{
 		set_mode(AUTO_STOP);
 	}

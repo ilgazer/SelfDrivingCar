@@ -42,5 +42,4 @@ typedef struct {
 #define PULLUP 1
 #define PULLDOWN 2
 
-
 #endif /* GPIO_H_ */

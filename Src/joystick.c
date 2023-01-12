@@ -3,14 +3,9 @@
 #include "board/gpio.h"
 #include "board/iser.h"
 #include "board/exti.h"
+#include "pins.h"
 
 
-//PA0, PA1 joystick inputs
-//PA0 joyistick VRy
-//PA1 joyistick VRx
-//PC0 right LDR
-//PC1 left LDR
-//PE15 push button interrupt
 void initialize_adc() {
 	ADC_shared->CCR |= (0b1011 << 18);
 	//Enable Clock for GPIO
@@ -26,17 +21,17 @@ void initialize_adc() {
 	//	 ADC_CCR |= (1 << 17);
 
 	//Change Pin Mode to Analog
-	SET_BITS(GPIOA->MODER, 0 * 2, ANALOG_MODE, 2);
-	SET_BITS(GPIOA->MODER, 1 * 2, ANALOG_MODE, 2);
+	SET_BITS(JOY_PORT->MODER, JOY_VRx * 2, ANALOG_MODE, 2);
+	SET_BITS(JOY_PORT->MODER, JOY_VRy * 2, ANALOG_MODE, 2);
 
-	SET_BITS(GPIOC->MODER, 0 * 2, ANALOG_MODE, 2);
-	SET_BITS(GPIOC->MODER, 1 * 2, ANALOG_MODE, 2);
+	SET_BITS(LDR_PORT->MODER, LDR_R * 2, ANALOG_MODE, 2);
+	SET_BITS(LDR_PORT->MODER, LDR_L * 2, ANALOG_MODE, 2);
 
-	SET_BITS(GPIOA->PUPDR, 0 * 2, NOPULL, 2);
-	SET_BITS(GPIOA->PUPDR, 1 * 2, NOPULL, 2);
+	SET_BITS(JOY_PORT->PUPDR, JOY_VRx * 2, NOPULL, 2);
+	SET_BITS(JOY_PORT->PUPDR, JOY_VRy * 2, NOPULL, 2);
 
-	SET_BITS(GPIOC->PUPDR, 0 * 2, NOPULL, 2);
-	SET_BITS(GPIOC->PUPDR, 1 * 2, NOPULL, 2);
+	SET_BITS(LDR_PORT->PUPDR, LDR_R * 2, NOPULL, 2);
+	SET_BITS(LDR_PORT->PUPDR, LDR_L * 2, NOPULL, 2);
 
 	//Change Injected channel sequence length to 2 conversions
 	SET_BITS(ADC1->JSQR, 0, 3, 4);
