@@ -26,8 +26,9 @@ void init_ultrasonic() {
 	TIM3->SR = 0; //clear UIF if it is set
 
 	TIM3->CCMR1 =
-	CCx_OUTPUT << CC1S |
-	OCxM_PWM1 << OC1M | 1 << OC1PE;
+			CCx_OUTPUT << CC1S |
+			OCxM_PWM1 << OC1M |
+			1 << OC1PE;
 
 	TIM3->CCMR2 = 0b01 << CC3S | 0b10 << CC4S;
 
@@ -43,7 +44,11 @@ void init_ultrasonic() {
 	SET(TIM3->DIER, CC4IE);
 	SET(ISER1, 46 - 32); //enable global signaling for TIMx interrupt
 
-	TIM3->CCER = 1 << CC4P | 1 << CC1E | 1 << CC3E | 1 << CC4E;
+	TIM3->CCER =
+			1 << CC4P |
+			1 << CC1E |
+			1 << CC3E |
+			1 << CC4E;
 
 	SET(TIM3->CR1, CEN); //TIMx_CNT is enabled (clocked)
 
