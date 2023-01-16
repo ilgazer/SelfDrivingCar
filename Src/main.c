@@ -59,7 +59,7 @@ void TIM7_IRQHandler(void) {
 }
 
 int main(void) {
-	init_mode(MANUAL);
+	init_drive(MANUAL);
 	init_indicators();
 	init_motors();
 	init_leds();

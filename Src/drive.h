@@ -16,7 +16,7 @@
 #include <stdint.h>
 
 void set_mode(uint8_t mode);
-void init_mode(uint8_t mode);
+void init_drive(uint8_t mode);
 void drive();
 void driver_stop();
 void joystick_button_handler();

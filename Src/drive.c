@@ -17,7 +17,7 @@ uint8_t get_mode()
 {
 	return mode;
 }
-void init_mode(uint8_t to_mode)
+void init_drive(uint8_t to_mode)
 {
 	mode = to_mode;
 }
@@ -134,7 +134,7 @@ void blue_button_handler(){
 		auto_mode = 0;
 		set_mode(MANUAL);
 	} else {
-		init_mode(AUTO_WAIT);
+		init_drive(AUTO_WAIT);
 		auto_mode = 1;
 	}
 }
