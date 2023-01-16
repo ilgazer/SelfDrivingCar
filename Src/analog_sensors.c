@@ -3,9 +3,10 @@
 #include "board/gpio.h"
 #include "board/iser.h"
 #include "board/exti.h"
+#include "drive.h"
 #include "pins.h"
 
-void initialize_sensors()
+void init_sensors()
 {
 	ADC_shared->CCR |= (0b1011 << 18);
 	// Enable Clock for GPIO
@@ -93,6 +94,12 @@ void refresh_sensors()
 	uint16_t LDR_left = ADC1->JDR4;
 
 	ldr_direction = ((LDR_left - LDR_left_calib) - (LDR_right - LDR_right_calib));
+}
+
+void ADC1_2_IRQHandler() {
+	refresh_sensors();
+	drive();
+	SET(ADC1->ISR, ADC_JEOS);
 }
 
 void refresh_ldr_calib()

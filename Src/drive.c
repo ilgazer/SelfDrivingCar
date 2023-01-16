@@ -109,6 +109,7 @@ void ultrasonic_stop()
 		mode = AUTO_STOP;
 	}
 }
+
 void joystick_button_handler()
 {
 	if (mode == MANUAL_STOP)
@@ -126,9 +127,20 @@ void joystick_button_handler()
 	}
 }
 
+void blue_button_handler(){
+	static int auto_mode = 0;
+	enable();
+	if (auto_mode) {
+		auto_mode = 0;
+		set_mode(MANUAL);
+	} else {
+		init_mode(AUTO_WAIT);
+		auto_mode = 1;
+	}
+}
+
 void drive()
 {
-
 	static uint8_t disarm_manual_counter = 0;
 	if ((get_distance() < 15) && (mode != MANUAL_OVERRIDE))
 	{

@@ -1,3 +1,4 @@
 Debug
 Startup
 *.launch
+.vscode/settings.json
