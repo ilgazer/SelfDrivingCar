@@ -24,7 +24,7 @@
 #include "board/iser.h"
 #include "utils.h"
 #include "motors.h"
-#include "joystick.h"
+#include "analog_sensors.h"
 #include "leds.h"
 #include "drive.h"
 #include "pins.h"
@@ -76,6 +76,7 @@ void TIM7_IRQHandler(void) {
 	TIM7->SR = 0; //clear UIF
 }
 void ADC1_2_IRQHandler() {
+	refresh_sensors();
 	drive();
 	SET(ADC1->ISR, ADC_JEOS);
 }
@@ -107,7 +108,7 @@ int main(void) {
 	init_extis();
 	init_leds();
 	set_led_direction(LED_STOP);
-	initialize_adc();
+	initialize_sensors();
 	init_ultrasonic();
 	if (BUSY_WAIT) {
 		while (1) {

@@ -24,7 +24,7 @@ void set_indicators(uint8_t mode){
 		return;
 	}
 	previous_mode = mode;
-	if(mode <= HARD_STOP){
+	if(mode <= MANUAL_STOP){
 		INDICATOR_AUTO_PORT->ODR |= (1 << INDICATOR_AUTO_PIN);
 	}else{
 		INDICATOR_AUTO_PORT->ODR &= ~(1 << INDICATOR_AUTO_PIN);
@@ -34,7 +34,7 @@ void set_indicators(uint8_t mode){
 	}else{
 		INDICATOR_OVERRIDE_PORT->ODR &= ~(1 << INDICATOR_OVERRIDE_PIN);
 	}
-	if(mode == HARD_STOP || mode == AUTO_STOP){
+	if(mode == MANUAL_STOP || mode == AUTO_STOP){
 		INDICATOR_STOP_PORT->ODR |= (1 << INDICATOR_STOP_PIN);
 	}else{
 		INDICATOR_STOP_PORT->ODR &= ~(1 << INDICATOR_STOP_PIN);

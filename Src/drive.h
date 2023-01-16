@@ -5,7 +5,7 @@
 
 #define MANUAL 1
 #define MANUAL_OVERRIDE 2
-#define HARD_STOP 3
+#define MANUAL_STOP 3
 #define AUTO_STOP 4
 #define AUTO_WAIT 5
 #define AUTO 7
