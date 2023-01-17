@@ -9,8 +9,6 @@
 #include "indicators.h"
 #include "analog_sensors.h"
 
-#define LDR_SENSITIVITY 5
-
 static uint8_t mode;
 
 uint8_t get_mode()
@@ -21,7 +19,7 @@ void init_drive(uint8_t to_mode)
 {
 	mode = to_mode;
 }
-void set_mode(uint8_t to_mode)
+void set_state(uint8_t to_mode)
 {
 	mode = to_mode;
 	drive();
@@ -34,8 +32,8 @@ void drive_manual()
 	int direction = get_joystick_y();
 	if (direction < 200 && direction > -200)
 		direction = 0;
-	set_speed(speed);
-	set_direction(direction);
+	set_speed(speed * 2);
+	set_direction(direction * 2);
 
 	if (direction < -500)
 	{
@@ -52,6 +50,8 @@ void drive_manual()
 	else if (500 < speed)
 	{
 		set_led_direction(LED_FORWARD);
+	}else{
+		set_led_direction(LED_STOP);
 	}
 }
 void drive_stop()
@@ -62,15 +62,16 @@ void drive_stop()
 
 void drive_auto()
 {
-	uint16_t auto_direction = get_ldr_direction() * LDR_SENSITIVITY;
-	if (auto_direction < -500)
+	static const int LDR_SENSITIVITY = 1;
+	int auto_direction = get_ldr_direction()  ;
+	if (auto_direction > 300)
 	{
-		set_direction(auto_direction > -1500 ? auto_direction : -1500);
+		set_direction(auto_direction < -3000 ? auto_direction : -3000);
 		set_led_direction(LED_RIGHT);
 	}
-	else if (auto_direction > 500)
+	else if (auto_direction < -300)
 	{
-		set_direction(auto_direction < 1500 ? auto_direction : 1500);
+		set_direction(auto_direction > 3000 ? auto_direction : 3000);
 		set_led_direction(LED_LEFT);
 	}
 	else
@@ -78,14 +79,16 @@ void drive_auto()
 		set_direction(0);
 		set_led_direction(LED_FORWARD);
 	}
-	set_speed(2000);
+	set_speed(4000);
 }
 void auto_wait()
 {
+	refresh_ldr_calib();
 	set_led_direction(LED_STOP);
 	set_direction(0);
 	set_speed(0);
-	if (get_joystick_x() < 4096 / 3)
+	int x = get_joystick_x();
+	if ((x) > 1500 && x > 0)
 	{
 		mode = AUTO;
 		drive_auto();
@@ -114,16 +117,16 @@ void joystick_button_handler()
 {
 	if (mode == MANUAL_STOP)
 	{
-		set_mode(MANUAL_OVERRIDE);
+		set_state(MANUAL_OVERRIDE);
 		enable();
 	}
 	else if (mode < MANUAL_STOP)
 	{
-		set_mode(MANUAL_STOP);
+		set_state(MANUAL_STOP);
 	}
 	else
 	{
-		set_mode(AUTO_STOP);
+		set_state(AUTO_STOP);
 	}
 }
 
@@ -132,7 +135,7 @@ void blue_button_handler(){
 	enable();
 	if (auto_mode) {
 		auto_mode = 0;
-		set_mode(MANUAL);
+		set_state(MANUAL);
 	} else {
 		init_drive(AUTO_WAIT);
 		auto_mode = 1;
@@ -142,11 +145,11 @@ void blue_button_handler(){
 void drive()
 {
 	static uint8_t disarm_manual_counter = 0;
-	if ((get_distance() < 15) && (mode != MANUAL_OVERRIDE))
+	if ((get_distance() < 16) && (mode != MANUAL_OVERRIDE))
 	{
 		ultrasonic_stop();
 	}
-	else if ((get_distance() > 12) && (mode == MANUAL_OVERRIDE))
+	else if ((get_distance() > 25) && (mode == MANUAL_OVERRIDE))
 	{
 		disarm_manual_counter += 1;
 		if (disarm_manual_counter > 26)
@@ -171,7 +174,6 @@ void drive()
 		drive_auto();
 		break;
 	case AUTO_WAIT:
-		refresh_ldr_calib();
 		auto_wait();
 		break;
 	case AUTO_STOP:

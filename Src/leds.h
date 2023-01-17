@@ -11,7 +11,6 @@
 typedef enum {LED_STOP, LED_FORWARD, LED_BACK, LED_RIGHT, LED_LEFT} led_direction;
 
 void init_TIM3();
-void TIM3_IRQHandler(void);
 void init_leds();
 void set_led_direction(led_direction d);
 

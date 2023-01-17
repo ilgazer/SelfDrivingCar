@@ -69,7 +69,7 @@ int main(void) {
 	init_buttons();
 	if (BUSY_WAIT) {
 		while (1) {
-			for (int i = 0; i < 33300; i++)
+			for (int i = 0; i < 33300 / 2; i++)
 				;
 			SET(ADC1->CR, ADC_JADSTART);
 		}

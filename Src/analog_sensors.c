@@ -69,13 +69,14 @@ void init_sensors()
 
 static uint16_t joystick_x_calib = 0;
 static uint16_t joystick_y_calib = 0;
-static uint16_t joystick_y = 0;
-static uint16_t joystick_x = 0;
+static int joystick_y = 0;
+static int joystick_x = 0;
 
 static uint16_t LDR_right_calib = 0;
 static uint16_t LDR_left_calib = 0;
-static uint16_t ldr_direction = 0;
-
+static int ldr_direction = 0;
+static uint16_t LDR_right;
+static uint16_t LDR_left;
 void refresh_sensors()
 {
 	uint16_t joystick_y_raw = ADC1->JDR1;
@@ -87,11 +88,11 @@ void refresh_sensors()
 		joystick_x_calib = joystick_x_raw;
 	}
 
-	joystick_x = joystick_x_raw - joystick_x_calib;
-	joystick_y = joystick_y_raw - joystick_y_calib;
+	joystick_x = (joystick_x_calib - joystick_x_raw );
+	joystick_y = (joystick_y_raw - joystick_y_calib);
 
-	uint16_t LDR_right = ADC1->JDR3;
-	uint16_t LDR_left = ADC1->JDR4;
+	LDR_right = (ADC1->JDR3 * 3 + LDR_left * 7) / 10;
+	LDR_left = (ADC1->JDR4 * 3 + LDR_left * 7) / 10;
 
 	ldr_direction = ((LDR_left - LDR_left_calib) - (LDR_right - LDR_right_calib));
 }
@@ -104,21 +105,25 @@ void ADC1_2_IRQHandler() {
 
 void refresh_ldr_calib()
 {
-	LDR_right_calib = ADC1->JDR3;
-	LDR_left_calib = ADC1->JDR4;
+//	LDR_right_calib = (ADC1->JDR3 * 3 + LDR_right_calib * 7) / 10;
+//	LDR_left_calib = (ADC1->JDR4 * 3 + LDR_right_calib * 7) / 10;
+		LDR_right_calib = LDR_right;
+		LDR_left_calib = LDR_left ;
+
+
 }
 
-uint16_t get_joystick_x()
+int get_joystick_x()
 {
 	return joystick_x;
 }
 
-uint16_t get_joystick_y()
+int get_joystick_y()
 {
 	return joystick_y;
 }
 
-uint16_t get_ldr_direction()
+int get_ldr_direction()
 {
 	return ldr_direction;
 }

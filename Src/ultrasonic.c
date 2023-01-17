@@ -58,8 +58,10 @@ void init_ultrasonic() {
 
 static int ultrasonic_distance = 1000;
 void TIM3_IRQHandler(void) {
-	ultrasonic_distance = (TIM3->CCR4 - TIM3->CCR3) / 58;
-
+	static const uint8_t reg = 3;
+	int new_distance = (TIM3->CCR4 - TIM3->CCR3) / 58;
+	if( new_distance - ultrasonic_distance  < 100 || ultrasonic_distance > 900 )
+	ultrasonic_distance = (ultrasonic_distance * (10-reg) + new_distance * reg) / 10 ;
 	TIM3->SR = 0; //clear UIF
 }
 
