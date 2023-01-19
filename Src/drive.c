@@ -63,23 +63,23 @@ void drive_stop()
 void drive_auto()
 {
 	static const int LDR_SENSITIVITY = 1;
-	int auto_direction = get_ldr_direction()  ;
+	int auto_direction = get_ldr_direction() * 4  - get_ldr_direction()*abs(get_ldr_direction())/900;
 	if (auto_direction > 300)
 	{
-		set_direction(auto_direction < -3000 ? auto_direction : -3000);
-		set_led_direction(LED_RIGHT);
+		set_direction(auto_direction  < -2000 ? -1800 : auto_direction*14/10 );
+		set_led_direction(LED_LEFT);
 	}
 	else if (auto_direction < -300)
 	{
-		set_direction(auto_direction > 3000 ? auto_direction : 3000);
-		set_led_direction(LED_LEFT);
+		set_direction(auto_direction > 2000 ? 1800: auto_direction*14/10  );
+		set_led_direction(LED_RIGHT);
 	}
 	else
 	{
 		set_direction(0);
 		set_led_direction(LED_FORWARD);
 	}
-	set_speed(4000);
+	set_speed(1700);
 }
 void auto_wait()
 {
@@ -145,7 +145,7 @@ void blue_button_handler(){
 void drive()
 {
 	static uint8_t disarm_manual_counter = 0;
-	if ((get_distance() < 16) && (mode != MANUAL_OVERRIDE))
+	if ((get_distance() < 20) && (mode != MANUAL_OVERRIDE))
 	{
 		ultrasonic_stop();
 	}

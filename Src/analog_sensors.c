@@ -91,10 +91,11 @@ void refresh_sensors()
 	joystick_x = (joystick_x_calib - joystick_x_raw );
 	joystick_y = (joystick_y_raw - joystick_y_calib);
 
-	LDR_right = (ADC1->JDR3 * 3 + LDR_left * 7) / 10;
-	LDR_left = (ADC1->JDR4 * 3 + LDR_left * 7) / 10;
-
-	ldr_direction = ((LDR_left - LDR_left_calib) - (LDR_right - LDR_right_calib));
+	static const int damp = 25;
+	LDR_right = (ADC1->JDR3 * damp + LDR_right * (100-damp)) / 100;
+	LDR_left = (ADC1->JDR4 * damp + LDR_left * (100-damp)) / 100;
+	int nldr = (  (LDR_right - LDR_right_calib) - (LDR_left - LDR_left_calib));
+	ldr_direction = (nldr * damp + ldr_direction * (100-damp)) / 100;
 }
 
 void ADC1_2_IRQHandler() {
@@ -105,10 +106,11 @@ void ADC1_2_IRQHandler() {
 
 void refresh_ldr_calib()
 {
-//	LDR_right_calib = (ADC1->JDR3 * 3 + LDR_right_calib * 7) / 10;
-//	LDR_left_calib = (ADC1->JDR4 * 3 + LDR_right_calib * 7) / 10;
-		LDR_right_calib = LDR_right;
-		LDR_left_calib = LDR_left ;
+	static const int damp = 15;
+	LDR_right_calib = (ADC1->JDR3 * damp + LDR_right_calib * (100-damp)) / 100;
+	LDR_left_calib = (ADC1->JDR4 * damp + LDR_left_calib * (100-damp)) / 100;
+//		LDR_right_calib = ADC1->JDR3;
+//		LDR_left_calib = ADC1->JDR4 ;
 
 
 }

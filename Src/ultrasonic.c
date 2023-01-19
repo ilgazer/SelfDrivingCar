@@ -19,7 +19,7 @@ void init_ultrasonic() {
 	SET_BITS(GPIOC->MODER, 8 * 2, ALTERNATE_MODE, 2);
 	SET_BITS(GPIOC->AFR[1], 0 * 4, 2, 4);
 
-	TIM3->PSC = 8; //Set Prescalers
+	TIM3->PSC = 4; //Set Prescalers
 	TIM3->ARR = 60000; //Set ARR
 
 	RESET(TIM3->CR1, UDIS);
@@ -32,7 +32,7 @@ void init_ultrasonic() {
 
 	TIM3->CCMR2 = 0b01 << CC3S | 0b10 << CC4S;
 
-	TIM3->CCR1 = 5;
+	TIM3->CCR1 = 10;
 
 	SET(TIM3->CR1, ARPE);
 
@@ -59,7 +59,7 @@ void init_ultrasonic() {
 static int ultrasonic_distance = 1000;
 void TIM3_IRQHandler(void) {
 	static const uint8_t reg = 3;
-	int new_distance = (TIM3->CCR4 - TIM3->CCR3) * 2 / 58;
+	int new_distance = (TIM3->CCR4 - TIM3->CCR3) / 58;
 	if( new_distance - ultrasonic_distance  < 100 || ultrasonic_distance > 900 )
 	ultrasonic_distance = (ultrasonic_distance * (10-reg) + new_distance * reg) / 10 ;
 	TIM3->SR = 0; //clear UIF

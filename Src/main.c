@@ -43,7 +43,7 @@ void init_TIM7() {
 	TIM7->CR1 &= ~(1 << 1); //OVF will generate an event
 
 	// TIM6 Interrupt Initialization
-	TIM7->ARR = 5;
+	TIM7->ARR = 2;
 	TIM7->SR = 0; //clear UIF if it is set
 	TIM7->DIER |= 1;
 	ISER1 |= 1 << 18; //enable global signaling for TIM6 interrupt
